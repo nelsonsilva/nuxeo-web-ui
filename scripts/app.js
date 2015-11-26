@@ -1,0 +1,1 @@
+window.Nuxeo=window.Nuxeo||{},Nuxeo.baseUrl="/nuxeo-web-ui/",function(e){"use strict";var o=e.querySelector("#app");o.addEventListener("dom-change",function(){console.log("Nuxeo is ready to rock!")})}(document);
