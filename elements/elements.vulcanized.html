@@ -182,6 +182,10 @@ var n=this._rootDataHost;return n?n._scopeElementClass(t,e):void 0},stamp:functi
 <style is="custom-style">:root{--dark-primary-color:#303F9F;--default-primary-color:#3F51B5;--light-primary-color:#C5CAE9;--text-primary-color:#ffffff;--accent-color:#FF4081;--primary-background-color:#f8fafc;--primary-text-color:#212121;--secondary-text-color:#727272;--disabled-text-color:#bdbdbd;--divider-color:#B6B6B6;--drawer-menu-color:#ffffff;--drawer-border-color:1px solid #ccc;--drawer-toolbar-border-color:1px solid rgba(0, 0, 0, 0.22);--paper-menu-background-color:#fff;--menu-link-color:#111111}#drawerToolbar{color:var(--secondary-text-color);background-color:var(--drawer-menu-color);border-bottom:var(--drawer-toolbar-border-color)}paper-scroll-header-panel{height:100%}paper-material{border-radius:2px;height:100%;padding:16px 0;width:calc(98.66% - 16px);margin:16px auto;background:#fff}paper-menu iron-icon{margin-right:33px;opacity:.54}.paper-menu>.iron-selected{color:var(--default-primary-color)}paper-menu a{@apply(--layout-horizontal);@apply(--layout-center);text-decoration:none;color:var(--menu-link-color);font-family:Roboto,Noto,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-size:14px;font-weight:400;line-height:24px;min-height:48px;padding:0 16px}.content{height:900px}@media (max-width:600px){paper-material{--menu-container-display:none;width:calc(97.33% - 32px);padding-left:16px;padding-right:16px}paper-toolbar.tall .app-name{font-size:24px;font-weight:400}#drawer .paper-toolbar{margin-left:16px}}@media (min-width:601px){paper-material{width:calc(98% - 46px);margin-bottom:32px;padding-left:30px;padding-right:30px}#drawer.paper-drawer-panel>[drawer]{border-right:1px solid rgba(0,0,0,.14)}iron-pages{padding:48px 62px}}</style>
 
 
+
+
+
+
 </head><body><div hidden by-vulcanize=""><dom-module id="iron-icon" assetpath="../bower_components/iron-icon/">
 
   <style>:host{@apply(--layout-inline);@apply(--layout-center-center);position:relative;vertical-align:middle;fill:var(--iron-icon-fill-color,currentcolor);stroke:var(--iron-icon-stroke-color,none);width:var(--iron-icon-width,24px);height:var(--iron-icon-height,24px)}</style>
@@ -930,14 +934,14 @@ var n=this._rootDataHost;return n?n._scopeElementClass(t,e):void 0},stamp:functi
   <script>Polymer({is:"nuxeo-page-provider",properties:{connectionId:{type:String,value:""},auto:{type:Boolean,value:!1},provider:{type:String,value:""},query:String,params:{type:Array,value:[]},pageSize:{type:Number,value:5},page:{type:Number,value:1},currentPage:{type:Array,value:[],notify:!0},sort:{type:Object,value:{},notify:!0},numberOfPages:{type:Number,notify:!0},resultsCount:{type:Number,notify:!0}},observers:["_autoFetch(provider, query, params, pageSize, page, sort)"],ready:function(){this.currentPage=[],this._autoFetch()},fetch:function(){this.$.operation.params={page:this.page-1,pageSize:this.pageSize,providerName:this.ref,query:this.query,queryParams:this.params,sortBy:this._sortKeys.join(","),sortOrder:this._sortValues.join(",")},this.$.operation.execute()},get _sortKeys(){return Object.keys(this.sort)},get _sortValues(){return this._sortKeys.map(function(e){return this.sort[e]}.bind(this))},_autoFetch:function(){this.$.operation.params&&this.query!==this.$.operation.params.query&&(this.page=1),this.auto&&(this.query||this.provider)&&this.fetch()},_onOpResponse:function(e,t){var r=t.response;this.currentPage=r.entries.slice(0),this.numberOfPages=r.numberOfPages,this.resultsCount=r.resultsCount,this.fire("update")}});</script>
 
 </dom-module>
-<dom-module id="nuxeo-app" assetpath="nuxeo-app/">
+<dom-module id="shared-styles" assetpath="../styles/"><template><style>.page-title{@apply(--paper-font-display2)}paper-menu a>*,paper-menu paper-icon-item>*,paper-menu paper-item>*{pointer-events:none}@media (max-width:600px){.page-title{font-size:24px!important}}.empty{color:#a8a8a8;display:block;padding:1rem 0;text-align:center;max-width:28rem;margin:0 auto}</style></template></dom-module><dom-module id="nuxeo-app" assetpath="nuxeo-app/">
   <template>
-    <style is="custom-style">#logo img{max-height:2em;max-width:7em}#toggle{right:1rem;top:1rem}.profile img{max-height:24px;max-width:24px}.dropdown-trigger{@apply(--layout-horizontal);@apply(--layout-center)}app-header{border-bottom:1px solid #eee}paper-badge{--paper-badge-background:var(--paper-amber-a700)}paper-tabs{height:100%;max-width:640px;--paper-tabs-selection-bar-color:#008cba;--paper-tabs-selection-bar:{top:0};}paper-tab{--paper-tab-ink:#aaa;text-transform:uppercase}[hidden]{display:none!important}</style>
+    <style is="custom-style">#logo img{max-height:2em;max-width:7em}#toggle{right:1rem;top:1rem}.profile img{max-height:24px;max-width:24px}.dropdown-trigger{@apply(--layout-horizontal);@apply(--layout-center)}app-header{border-bottom:1px solid #eee}paper-badge{--paper-badge-background:#f68500}paper-tabs{height:100%;max-width:640px;--paper-tabs-selection-bar-color:#008cba;--paper-tabs-selection-bar:{top:0};}paper-tab{--paper-tab-ink:#aaa;text-transform:uppercase}[drawer] .card{margin:0;padding:20px}[drawer] .card h1{background-color:#213f7d;color:#fff;font-size:1.1rem;margin:-1.4rem -1.35rem 0;padding:.5rem 1.3rem;font-weight:700;border-bottom:1px solid #edeff0}.badge{float:right;@apply(--paper-font-common-base);font-weight:600;font-size:12px;border-radius:50%;width:var(--paper-badge-width,20px);height:var(--paper-badge-height,20px);background-color:#f68500;opacity:var(--paper-badge-opacity,1);color:var(--paper-badge-text-color,#fff);@apply(--layout);@apply(--layout-center-center);display:block;outline:0}[hidden]{display:none!important}</style>
 
     <nuxeo-connection url="http://localhost:8080/nuxeo"></nuxeo-connection>
     <nuxeo-document auto="" doc-path="/default-domain" response="{{currentDocument}}" enrichers="permissions"></nuxeo-document>
 
-    <app-drawer-layout id="drawerLayout" force-narrow="true" drawer-width="288px" drawer-position="right" responsive-width="1280px">
+    <app-drawer-layout force-narrow="true" drawer-width="288px" drawer-position="right" responsive-width="1280px">
 
       <app-header-layout main="">
 
@@ -987,7 +991,7 @@ var n=this._rootDataHost;return n?n._scopeElementClass(t,e):void 0},stamp:functi
             
             <div id="toggle">
               <paper-icon-button icon="menu" drawer-toggle="" aria-label="menu"></paper-icon-button>
-              <paper-badge label="3"></paper-badge>
+              <paper-badge label="[[taskCount]]"></paper-badge>
             </div>
           </app-toolbar>
         </app-header>
@@ -1001,18 +1005,31 @@ var n=this._rootDataHost;return n?n._scopeElementClass(t,e):void 0},stamp:functi
 
       
       <div drawer="">
-        
+        <section class="card">
+          <h1>Clipboard</h1>
+          <nuxeo-clipboard><nuxeo-clipboard>
+        </nuxeo-clipboard></nuxeo-clipboard></section>
+
+        <section class="card">
+          <h1>Tasks <div class="badge">[[taskCount]]</div></h1>
+          <nuxeo-task-list count="{{taskCount}}"></nuxeo-task-list>
+        </section>
+
+        <section class="card">
+          <h1>Collections</h1>
+          <nuxeo-collections></nuxeo-collections>
+        </section>
       </div>
 
     </app-drawer-layout>
   </template>
 
-  <script>!function(){"use strict";Polymer({is:"nuxeo-app",propertied:{selectedPage:{type:String}},ready:function(){this.selectedPage="browse",this.baseUrl=Nuxeo.baseUrl}})}();</script>
+  <script>!function(){"use strict";Polymer({is:"nuxeo-app",properties:{currentDocument:{type:String},taskCount:{type:Number},selectedPage:{type:String}},ready:function(){this.selectedPage="browse",this.baseUrl=Nuxeo.baseUrl}})}();</script>
 
 </dom-module>
 <dom-module id="nuxeo-browser" assetpath="nuxeo-browser/">
   <template>
-    <style is="custom-style">.side-nav{background-color:#213f7d;height:100%;position:fixed;width:60px}.content,.paper-header{background-color:var(--primary-background-color)}.side-nav paper-icon-button{color:#fff;width:60px;height:60px;padding:15px}.main{left:60px}paper-header-panel{height:240px}.paper-header{height:60px;color:#039be5;font-size:24px;padding-left:20px;@apply(--layout-horizontal);@apply(--layout-center)}.content{height:2000px}</style>
+    <style is="custom-style">.side-nav{background-color:#213f7d;height:100%;position:fixed;width:60px}.content,.paper-header{background-color:var(--primary-background-color)}.side-nav paper-icon-button{color:#fff;width:60px;height:60px;padding:15px}.main{left:60px}paper-header-panel{height:100vh}.paper-header{height:60px;color:#039be5;font-size:24px;padding-left:20px;@apply(--layout-horizontal);@apply(--layout-center)}.content{height:2000px}</style>
 
     
 
@@ -1065,7 +1082,7 @@ var n=this._rootDataHost;return n?n._scopeElementClass(t,e):void 0},stamp:functi
 
   </template>
 
-  <script>!function(){"use strict";Polymer({is:"nuxeo-browser",properties:{document:{type:Object}},observers:["_updateTabs(document)"],_updateTabs:function(){this.selectedTab="view"},get _enrichers(){return this.document?this.document.contextParameters:void 0},get _isFolderish(){return-1!==this.document.facets.indexOf("Folderish")},get _canReadChildren(){return this._enrichers&&-1!==this._enrichers.permissions.indexOf("ReadChildren")},_canView:function(){return this.document&&!this._isFolderish},_canViewContent:function(){return this.document&&this._isFolderish}})}();</script>
+  <script>!function(){"use strict";Polymer({is:"nuxeo-browser",properties:{document:{type:Object},selectedTab:{type:String}},observers:["_updateTabs(document)"],_updateTabs:function(){this.selectedTab="view"},get _enrichers(){return this.document?this.document.contextParameters:void 0},get _isFolderish(){return-1!==this.document.facets.indexOf("Folderish")},get _canReadChildren(){return this._enrichers&&-1!==this._enrichers.permissions.indexOf("ReadChildren")},_canView:function(){return this.document&&!this._isFolderish},_canViewContent:function(){return this.document&&this._isFolderish}})}();</script>
 
 </dom-module>
 <dom-module id="nuxeo-document-view" assetpath="nuxeo-document-view/">
@@ -1096,5 +1113,26 @@ var n=this._rootDataHost;return n?n._scopeElementClass(t,e):void 0},stamp:functi
 
   <script>!function(){"use strict";Polymer({is:"nuxeo-document-content-view",properties:{document:{type:Object,notify:!0},params:{type:Array}},navigate:function(){this.document=arguments[0].model.item},_path:function(){return"/query/document_content?queryParams="+this.document.uid}})}();</script>
 
+</dom-module>
+<dom-module id="nuxeo-clipboard" assetpath="nuxeo-clipboard/">
+  <template>
+    <style include="shared-styles"></style>
+    <span class="empty">Your clipboard is empty.</span>
+  </template>
+  <script>Polymer({is:"nuxeo-clipboard"});</script>
+</dom-module>
+<dom-module id="nuxeo-collections" assetpath="nuxeo-collections/">
+  <template>
+    <style include="shared-styles"></style>
+    <span class="empty">No collections.</span>
+  </template>
+  <script>Polymer({is:"nuxeo-collections"});</script>
+</dom-module>
+<dom-module id="nuxeo-task-list" assetpath="nuxeo-task-list/">
+  <template>
+    <style include="shared-styles"></style>
+    <span class="empty">No tasks.</span>
+  </template>
+  <script>Polymer({is:"nuxeo-task-list",properties:{count:{type:Number,value:0,notify:!0}}});</script>
 </dom-module>
 </div></body></html>
