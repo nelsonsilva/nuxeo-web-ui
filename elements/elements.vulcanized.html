@@ -238,6 +238,7 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
 
 
 
+
 </head><body><div hidden by-vulcanize=""><dom-module id="iron-icon" assetpath="../bower_components/iron-icon/">
 
   <style>:host{@apply(--layout-inline);@apply(--layout-center-center);position:relative;vertical-align:middle;fill:var(--iron-icon-fill-color,currentcolor);stroke:var(--iron-icon-stroke-color,none);width:var(--iron-icon-width,24px);height:var(--iron-icon-height,24px)}</style>
@@ -1018,47 +1019,35 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
 </defs></svg>
 </iron-iconset-svg>
 <dom-module id="paper-tab" assetpath="../bower_components/paper-tabs/">
-
-  <style>:host{@apply(--layout-inline);@apply(--layout-center);@apply(--layout-center-justified);@apply(--layout-flex);position:relative;padding:0 12px;overflow:hidden;cursor:pointer;@apply(--paper-tab)}:host(:focus){outline:0}:host([link]){padding:0}.tab-content{height:100%;-webkit-transform:translateZ(0);transform:translateZ(0);transition:opacity .1s cubic-bezier(.4,0,1,1);@apply(--layout-horizontal);@apply(--layout-center-center);@apply(--layout-flex-auto);@apply(--paper-tab-content)}:host(:not(.iron-selected))>.tab-content{opacity:.8;@apply(--paper-tab-content-unselected)}:host(:focus) .tab-content{opacity:1;font-weight:700}paper-ripple{color:var(--paper-tab-ink,--paper-yellow-a100)}.tab-content>::content>a{height:100%;-ms-flex:1 1 0px;-webkit-flex:1;flex:1;-webkit-flex-basis:0px;flex-basis:0px}</style>
-
   <template>
+    <style>:host{@apply(--layout-inline);@apply(--layout-center);@apply(--layout-center-justified);@apply(--layout-flex);position:relative;padding:0 12px;overflow:hidden;cursor:pointer;@apply(--paper-tab)}:host(:focus){outline:0}:host([link]){padding:0}.tab-content{height:100%;transform:translateZ(0);-webkit-transform:translateZ(0);transition:opacity .1s cubic-bezier(.4,0,1,1);@apply(--layout-horizontal);@apply(--layout-center-center);@apply(--layout-flex-auto);@apply(--paper-tab-content)}:host(:not(.iron-selected))>.tab-content{opacity:.8;@apply(--paper-tab-content-unselected)}:host(:focus) .tab-content{opacity:1;font-weight:700}paper-ripple{color:var(--paper-tab-ink,--paper-yellow-a100)}.tab-content>::content>a{height:100%;-ms-flex:1 1 0px;-webkit-flex:1;flex:1;-webkit-flex-basis:0px;flex-basis:0px}</style>
 
     <div class="tab-content">
       <content></content>
     </div>
-
   </template>
 
+  <script>Polymer({is:"paper-tab",behaviors:[Polymer.IronControlState,Polymer.IronButtonState,Polymer.PaperRippleBehavior],hostAttributes:{role:"tab"},listeners:{down:"_updateNoink"},ready:function(){var t=this.getRipple();t.initialOpacity=.95,t.opacityDecayVelocity=.98},attached:function(){this._updateNoink()},get _parentNoink(){var t=Polymer.dom(this).parentNode;return!!t&&!!t.noink},_updateNoink:function(){this.noink=!!this.noink||!!this._parentNoink}});</script>
 </dom-module>
-
-<script>Polymer({is:"paper-tab",behaviors:[Polymer.IronControlState,Polymer.IronButtonState,Polymer.PaperRippleBehavior],hostAttributes:{role:"tab"},listeners:{down:"_updateNoink"},ready:function(){var t=this.getRipple();t.initialOpacity=.95,t.opacityDecayVelocity=.98},attached:function(){this._updateNoink()},get _parentNoink(){var t=Polymer.dom(this).parentNode;return!!t&&!!t.noink},_updateNoink:function(){this.noink=!!this.noink||!!this._parentNoink}});</script>
 <dom-module id="paper-tabs" assetpath="../bower_components/paper-tabs/">
-
-  <style>:host{@apply(--layout);@apply(--layout-center);height:48px;font-size:14px;font-weight:500;overflow:hidden;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;@apply(--paper-tabs)}:host-context([dir=rtl]){@apply(--layout-horizontal-reverse)}#tabsContainer{position:relative;height:100%;white-space:nowrap;overflow:hidden;@apply(--layout-flex)}#tabsContent{height:100%}#tabsContent.scrollable{position:absolute;white-space:nowrap}#tabsContent.horizontal{@apply(--layout-horizontal)}.hidden{display:none}.not-visible{opacity:0;cursor:default}paper-icon-button{width:48px;height:48px;padding:12px;margin:0 4px}#selectionBar{position:absolute;height:2px;bottom:0;left:0;right:0;background-color:var(--paper-tabs-selection-bar-color,--paper-yellow-a100);-webkit-transform-origin:left center;transform-origin:left center;-webkit-transform:scale(0);transform:scale(0);transition:-webkit-transform;transition:transform;@apply(--paper-tabs-selection-bar)}#selectionBar.align-bottom{top:0;bottom:auto}#selectionBar.expand{transition-duration:.15s;transition-timing-function:cubic-bezier(.4,0,1,1)}#selectionBar.contract{transition-duration:.18s;transition-timing-function:cubic-bezier(0,0,.2,1)}#tabsContent>::content>:not(#selectionBar){height:100%}</style>
-
   <template>
+    <style>:host{@apply(--layout);@apply(--layout-center);height:48px;font-size:14px;font-weight:500;overflow:hidden;-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;@apply(--paper-tabs)}:host-context([dir=rtl]){@apply(--layout-horizontal-reverse)}#tabsContainer{position:relative;height:100%;white-space:nowrap;overflow:hidden;@apply(--layout-flex)}#tabsContent{height:100%}#tabsContent.scrollable{position:absolute;white-space:nowrap}#tabsContent.horizontal{@apply(--layout-horizontal)}.hidden{display:none}.not-visible{opacity:0;cursor:default}paper-icon-button{width:48px;height:48px;padding:12px;margin:0 4px}#selectionBar{position:absolute;height:2px;bottom:0;left:0;right:0;background-color:var(--paper-tabs-selection-bar-color,--paper-yellow-a100);-webkit-transform:scale(0);transform:scale(0);-webkit-transform-origin:left center;transform-origin:left center;transition:-webkit-transform;transition:transform;@apply(--paper-tabs-selection-bar)}#selectionBar.align-bottom{top:0;bottom:auto}#selectionBar.expand{transition-duration:.15s;transition-timing-function:cubic-bezier(.4,0,1,1)}#selectionBar.contract{transition-duration:.18s;transition-timing-function:cubic-bezier(0,0,.2,1)}#tabsContent>::content>:not(#selectionBar){height:100%}</style>
 
     <paper-icon-button icon="paper-tabs:chevron-left" class$="[[_computeScrollButtonClass(_leftHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onLeftScrollButtonDown" tabindex="-1"></paper-icon-button>
 
     <div id="tabsContainer" on-track="_scroll" on-down="_down">
-
       <div id="tabsContent" class$="[[_computeTabsContentClass(scrollable)]]">
-
         <content select="*"></content>
-
         <div id="selectionBar" class$="[[_computeSelectionBarClass(noBar, alignBottom)]]" on-transitionend="_onBarTransitionEnd"></div>
-
       </div>
-
     </div>
 
     <paper-icon-button icon="paper-tabs:chevron-right" class$="[[_computeScrollButtonClass(_rightHidden, scrollable, hideScrollButtons)]]" on-up="_onScrollButtonUp" on-down="_onRightScrollButtonDown" tabindex="-1"></paper-icon-button>
 
   </template>
 
+  <script>Polymer({is:"paper-tabs",behaviors:[Polymer.IronResizableBehavior,Polymer.IronMenubarBehavior],properties:{noink:{type:Boolean,value:!1,observer:"_noinkChanged"},noBar:{type:Boolean,value:!1},noSlide:{type:Boolean,value:!1},scrollable:{type:Boolean,value:!1},disableDrag:{type:Boolean,value:!1},hideScrollButtons:{type:Boolean,value:!1},alignBottom:{type:Boolean,value:!1},selected:{type:String,notify:!0},selectable:{type:String,value:"paper-tab"},_step:{type:Number,value:10},_holdDelay:{type:Number,value:1},_leftHidden:{type:Boolean,value:!1},_rightHidden:{type:Boolean,value:!1},_previousTab:{type:Object}},hostAttributes:{role:"tablist"},listeners:{"iron-resize":"_onResize","iron-select":"_onIronSelect","iron-deselect":"_onIronDeselect"},created:function(){this._holdJob=null},ready:function(){this.setScrollDirection("y",this.$.tabsContainer)},_noinkChanged:function(t){var e=Polymer.dom(this).querySelectorAll("paper-tab");e.forEach(t?this._setNoinkAttribute:this._removeNoinkAttribute)},_setNoinkAttribute:function(t){t.setAttribute("noink","")},_removeNoinkAttribute:function(t){t.removeAttribute("noink")},_computeScrollButtonClass:function(t,e,i){return!e||i?"hidden":t?"not-visible":""},_computeTabsContentClass:function(t){return t?"scrollable":"horizontal"},_computeSelectionBarClass:function(t,e){return t?"hidden":e?"align-bottom":void 0},_onResize:function(){this.debounce("_onResize",function(){this._scroll(),this._tabChanged(this.selectedItem)},10)},_onIronSelect:function(t){this._tabChanged(t.detail.item,this._previousTab),this._previousTab=t.detail.item,this.cancelDebouncer("tab-changed")},_onIronDeselect:function(t){this.debounce("tab-changed",function(){this._tabChanged(null,this._previousTab)},1)},get _tabContainerScrollSize(){return Math.max(0,this.$.tabsContainer.scrollWidth-this.$.tabsContainer.offsetWidth)},_scroll:function(t,e){if(this.scrollable){var i=e&&-e.ddx||0;this._affectScroll(i)}},_down:function(t){this.async(function(){this._defaultFocusAsync&&(this.cancelAsync(this._defaultFocusAsync),this._defaultFocusAsync=null)},1)},_affectScroll:function(t){this.$.tabsContainer.scrollLeft+=t;var e=this.$.tabsContainer.scrollLeft;this._leftHidden=0===e,this._rightHidden=e===this._tabContainerScrollSize},_onLeftScrollButtonDown:function(){this._scrollToLeft(),this._holdJob=setInterval(this._scrollToLeft.bind(this),this._holdDelay)},_onRightScrollButtonDown:function(){this._scrollToRight(),this._holdJob=setInterval(this._scrollToRight.bind(this),this._holdDelay)},_onScrollButtonUp:function(){clearInterval(this._holdJob),this._holdJob=null},_scrollToLeft:function(){this._affectScroll(-this._step)},_scrollToRight:function(){this._affectScroll(this._step)},_tabChanged:function(t,e){if(!t)return void this._positionBar(0,0);var i=this.$.tabsContent.getBoundingClientRect(),o=i.width,n=t.getBoundingClientRect(),s=n.left-i.left;if(this._pos={width:this._calcPercent(n.width,o),left:this._calcPercent(s,o)},this.noSlide||null==e)return void this._positionBar(this._pos.width,this._pos.left);var l=e.getBoundingClientRect(),a=this.items.indexOf(e),r=this.items.indexOf(t),c=5;this.$.selectionBar.classList.add("expand"),r>a?this._positionBar(this._calcPercent(n.left+n.width-l.left,o)-c,this._left):this._positionBar(this._calcPercent(l.left+l.width-n.left,o)-c,this._calcPercent(s,o)+c),this.scrollable&&this._scrollToSelectedIfNeeded(n.width,s)},_scrollToSelectedIfNeeded:function(t,e){var i=e-this.$.tabsContainer.scrollLeft;0>i?this.$.tabsContainer.scrollLeft+=i:(i+=t-this.$.tabsContainer.offsetWidth,i>0&&(this.$.tabsContainer.scrollLeft+=i))},_calcPercent:function(t,e){return 100*t/e},_positionBar:function(t,e){t=t||0,e=e||0,this._width=t,this._left=e,this.transform("translate3d("+e+"%, 0, 0) scaleX("+t/100+")",this.$.selectionBar)},_onBarTransitionEnd:function(t){var e=this.$.selectionBar.classList;e.contains("expand")?(e.remove("expand"),e.add("contract"),this._positionBar(this._pos.width,this._pos.left)):e.contains("contract")&&e.remove("contract")}});</script>
 </dom-module>
-
-<script>Polymer({is:"paper-tabs",behaviors:[Polymer.IronResizableBehavior,Polymer.IronMenubarBehavior],properties:{noink:{type:Boolean,value:!1,observer:"_noinkChanged"},noBar:{type:Boolean,value:!1},noSlide:{type:Boolean,value:!1},scrollable:{type:Boolean,value:!1},disableDrag:{type:Boolean,value:!1},hideScrollButtons:{type:Boolean,value:!1},alignBottom:{type:Boolean,value:!1},selected:{type:String,notify:!0},selectable:{type:String,value:"paper-tab"},_step:{type:Number,value:10},_holdDelay:{type:Number,value:1},_leftHidden:{type:Boolean,value:!1},_rightHidden:{type:Boolean,value:!1},_previousTab:{type:Object}},hostAttributes:{role:"tablist"},listeners:{"iron-resize":"_onResize","iron-select":"_onIronSelect","iron-deselect":"_onIronDeselect"},created:function(){this._holdJob=null},ready:function(){this.setScrollDirection("y",this.$.tabsContainer)},_noinkChanged:function(t){var e=Polymer.dom(this).querySelectorAll("paper-tab");e.forEach(t?this._setNoinkAttribute:this._removeNoinkAttribute)},_setNoinkAttribute:function(t){t.setAttribute("noink","")},_removeNoinkAttribute:function(t){t.removeAttribute("noink")},_computeScrollButtonClass:function(t,e,i){return!e||i?"hidden":t?"not-visible":""},_computeTabsContentClass:function(t){return t?"scrollable":"horizontal"},_computeSelectionBarClass:function(t,e){return t?"hidden":e?"align-bottom":void 0},_onResize:function(){this.debounce("_onResize",function(){this._scroll(),this._tabChanged(this.selectedItem)},10)},_onIronSelect:function(t){this._tabChanged(t.detail.item,this._previousTab),this._previousTab=t.detail.item,this.cancelDebouncer("tab-changed")},_onIronDeselect:function(t){this.debounce("tab-changed",function(){this._tabChanged(null,this._previousTab)},1)},get _tabContainerScrollSize(){return Math.max(0,this.$.tabsContainer.scrollWidth-this.$.tabsContainer.offsetWidth)},_scroll:function(t,e){if(this.scrollable){var i=e&&-e.ddx||0;this._affectScroll(i)}},_down:function(t){this.async(function(){this._defaultFocusAsync&&(this.cancelAsync(this._defaultFocusAsync),this._defaultFocusAsync=null)},1)},_affectScroll:function(t){this.$.tabsContainer.scrollLeft+=t;var e=this.$.tabsContainer.scrollLeft;this._leftHidden=0===e,this._rightHidden=e===this._tabContainerScrollSize},_onLeftScrollButtonDown:function(){this._scrollToLeft(),this._holdJob=setInterval(this._scrollToLeft.bind(this),this._holdDelay)},_onRightScrollButtonDown:function(){this._scrollToRight(),this._holdJob=setInterval(this._scrollToRight.bind(this),this._holdDelay)},_onScrollButtonUp:function(){clearInterval(this._holdJob),this._holdJob=null},_scrollToLeft:function(){this._affectScroll(-this._step)},_scrollToRight:function(){this._affectScroll(this._step)},_tabChanged:function(t,e){if(!t)return void this._positionBar(0,0);var i=this.$.tabsContent.getBoundingClientRect(),o=i.width,n=t.getBoundingClientRect(),s=n.left-i.left;if(this._pos={width:this._calcPercent(n.width,o),left:this._calcPercent(s,o)},this.noSlide||null==e)return void this._positionBar(this._pos.width,this._pos.left);var l=e.getBoundingClientRect(),a=this.items.indexOf(e),r=this.items.indexOf(t),c=5;this.$.selectionBar.classList.add("expand"),r>a?this._positionBar(this._calcPercent(n.left+n.width-l.left,o)-c,this._left):this._positionBar(this._calcPercent(l.left+l.width-n.left,o)-c,this._calcPercent(s,o)+c),this.scrollable&&this._scrollToSelectedIfNeeded(n.width,s)},_scrollToSelectedIfNeeded:function(t,e){var i=e-this.$.tabsContainer.scrollLeft;0>i?this.$.tabsContainer.scrollLeft+=i:(i+=t-this.$.tabsContainer.offsetWidth,i>0&&(this.$.tabsContainer.scrollLeft+=i))},_calcPercent:function(t,e){return 100*t/e},_positionBar:function(t,e){t=t||0,e=e||0,this._width=t,this._left=e,this.transform("translate3d("+e+"%, 0, 0) scaleX("+t/100+")",this.$.selectionBar)},_onBarTransitionEnd:function(t){var e=this.$.selectionBar.classList;e.contains("expand")?(e.remove("expand"),e.add("contract"),this._positionBar(this._pos.width,this._pos.left)):e.contains("contract")&&e.remove("contract")}});</script>
 <dom-module id="iron-a11y-announcer" assetpath="../bower_components/iron-a11y-announcer/">
   <style>:host{display:inline-block;position:fixed;clip:rect(0,0,0,0)}</style>
 
@@ -1428,7 +1417,7 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
 </dom-module>
 <dom-module id="nuxeo-document-view" assetpath="nuxeo-document-view/">
   <template>
-    <style is="custom-style">:host{display:block}.container{padding:20px;width:800px}.docview{padding:2.5rem 5rem;box-sizing:border-box}a{color:#039be5;text-decoration:none}.row{margin-bottom:1rem;box-sizing:inherit}.sep{border-top:1px solid #e8e8e8}.sideinfo{padding:.75rem;box-sizing:border-box}.sidetitle{color:#213f7d;font-size:1.64rem}.badge,.startbutton{position:relative;display:inline-block;text-transform:uppercase;color:#fff;vertical-align:middle;border-radius:2px}.badge{background-color:#00adff;padding:.2rem .4rem;margin-right:3px;margin-bottom:3px;font-size:.9rem}.icon{--iron-icon-height:0.9rem;--iron-icon-width:0.9rem;margin-right:.2rem}.sidecard{width:100%;margin-bottom:1em}.cardcontent{padding:.75rem 0;box-sizing:border-box}.docreator{font-size:1.2rem}.startbutton{background-color:#f68500;padding:.75rem 1.5rem}.auditcontent{max-height:10rem;overflow-y:auto}</style>
+    <style is="custom-style">:host{display:block}.badge,.startbutton{position:relative;display:inline-block;text-transform:uppercase;vertical-align:middle;border-radius:2px}.container{padding:20px;width:800px}.docview{padding:2.5rem 5rem;box-sizing:border-box}a{color:#039be5;text-decoration:none}.row{margin-bottom:1rem;box-sizing:inherit}.sep{border-top:1px solid #e8e8e8}.sideinfo{padding:.75rem;box-sizing:border-box}.sidetitle{color:#213f7d;font-size:1.64rem}.badge{background-color:#00adff;color:#fff;padding:.2rem .4rem;margin-right:3px;margin-bottom:3px;text-align:center;font-size:.9rem}.graybadge{background-color:#eee;color:#999}.icon{--iron-icon-height:0.9rem;--iron-icon-width:0.9rem;margin-right:.2rem}.sidecard{width:100%;margin-bottom:1em}.cardcontent{padding:.75rem 0;box-sizing:border-box}.docreator{font-size:1.2rem}.startbutton{background-color:#f68500;color:#fff;padding:.75rem 1.5rem}.auditcontent{max-height:10rem;overflow-y:auto}</style>
 
     <div>
       <iron-pages id="doc-pages" selected="[[mode]]" attr-for-selected="name">
@@ -1460,6 +1449,15 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
                   </div>
                 </paper-card>
               </template>
+              <paper-card class="sidecard">
+                <div class="card-content">
+                  <p class="sidetitle">Status</p>
+                  <div class="horizontal layout sep wrap cardcontent">
+                    <span class="badge">[[document.state]]</span>
+                    <span class="badge graybadge">Version [[document.properties.uid:major_version]].[[document.properties.uid:minor_version]]</span>
+                  </div>
+                </div>
+              </paper-card>
               <paper-card class="sidecard">
                 <div class="card-content">
                   <div class="vertical layout cardcontent">
@@ -1610,7 +1608,7 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
 <dom-module id="nuxeo-file-view" assetpath="nuxeo-file-view/">
 
   <template>
-    <style is="custom-style">:host{display:block}a{color:#039be5;text-decoration:none}.docinfo{padding:.75rem;box-sizing:border-box}.mainfile{padding:2rem}.mainfilename{color:#039be5;font-size:1.5rem;padding:1rem 0}.icon{vertical-align:middle}.attachcontainer{border-top:1px dashed #ddd;background-color:#fafafd;padding:2rem}.attchtitle{color:#213f7d;font-size:1.64rem;padding-bottom:1rem}.attachments{padding:2rem 0}.attachment{padding:.5rem 0}.attachname{color:#039be5;font-size:1.2rem}.attchsize{font-size:.8rem;color:#999}.addfiles{border-top:1px solid #e8e8e8;padding:2rem 0;color:#a8a8a8;text-align:center}</style>
+    <style is="custom-style">:host{display:block}a{color:#039be5;text-decoration:none}.docinfo{padding:.75rem;box-sizing:border-box}.mainfile{padding:2rem}.mainfilename{color:#039be5;font-size:1.5rem;padding:1rem 0}.icon{vertical-align:middle}.attachcontainer{border-top:1px dashed #ddd;background-color:#fafafd;padding:2rem}.attchtitle{color:#213f7d;font-size:1.64rem;padding-bottom:1rem}.attachment{padding:.5rem 0}.attachname{color:#039be5;font-size:1.2rem}.attchsize{font-size:.8rem;color:#999}.addfiles{border-top:1px solid #e8e8e8;margin:1rem 0;padding-top:2rem;color:#a8a8a8;text-align:center}</style>
 
     <div class="docinfo vertical layout">
       <paper-card>
@@ -1628,7 +1626,7 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
             <iron-icon icon="editor:attach-file" class="icon"></iron-icon>
             Attachments
           </div>
-          <div class="vertical layout attachments">
+          <div class="vertical layout">
             <template is="dom-repeat" items="[[document.properties.files:files]]">
               <div class="vertical layout attachment">
                 <a href="[[item.file.data]]" class="attachname">[[item.filename]]</a>
@@ -1644,7 +1642,41 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
     </div>
   </template>
 
-  <script>!function(){"use strict";Polymer({is:"nuxeo-file-view",properties:{document:{type:Object,notify:!0}},_formatSize:function(t){return t>1048576?parseFloat(t/1048576).toFixed(2)+" MB":t>1024?parseFloat(t/1024).toFixed(2)+" KB":t.toString()+" B"}})}();</script>
+  <script>!function(){"use strict";Polymer({is:"nuxeo-file-view",properties:{document:{type:Object,notify:!0}},_formatSize:function(t){return t?t>1048576?parseFloat(t/1048576).toFixed(2)+" MB":t>1024?parseFloat(t/1024).toFixed(2)+" KB":t.toString()+" B":""}})}();</script>
+
+</dom-module>
+<dom-module id="nuxeo-note-view" assetpath="nuxeo-note-view/">
+
+  <template>
+    <style is="custom-style">:host{display:block}a{color:#039be5;text-decoration:none}pre{display:inline-block;white-space:pre-wrap;white-space:-moz-pre-wrap!important;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word}.docinfo{padding:.75rem;box-sizing:border-box}.notecontent{padding:2rem}.icon{vertical-align:middle}.attachcontainer{border-top:1px dashed #ddd;background-color:#fafafd;padding:2rem}.attchtitle{color:#213f7d;font-size:1.64rem;padding-bottom:1rem}.attachment{padding:.5rem 0}.attachname{color:#039be5;font-size:1.2rem}.attchsize{font-size:.8rem;color:#999}.addfiles{border-top:1px solid #e8e8e8;margin:1rem 0;padding-top:2rem;color:#a8a8a8;text-align:center}</style>
+
+    <div class="docinfo vertical layout">
+      <paper-card>
+        <div class="vertical layout notecontent">
+          <pre>[[document.properties.note:note]]</pre>
+        </div>
+        <div class="vertical layout attachcontainer">
+          <div class="horizontal layout center attchtitle">
+            <iron-icon icon="editor:attach-file" class="icon"></iron-icon>
+            Attachments
+          </div>
+          <div class="vertical layout">
+            <template is="dom-repeat" items="[[document.properties.files:files]]">
+              <div class="vertical layout attachment">
+                <a href="[[item.file.data]]" class="attachname">[[item.filename]]</a>
+                <span class="attchsize">[[_formatSize(item.file.length)]]</span>
+              </div>
+            </template>
+          </div>
+          <div class="addfiles">
+            + Complete the document with additional files
+          </div>
+        </div>
+      </paper-card>
+    </div>
+  </template>
+
+  <script>!function(){"use strict";Polymer({is:"nuxeo-note-view",properties:{document:{type:Object,notify:!0}},_formatSize:function(t){return t>1048576?parseFloat(t/1048576).toFixed(2)+" MB":t>1024?parseFloat(t/1024).toFixed(2)+" KB":t.toString()+" B"}})}();</script>
 
 </dom-module>
 <dom-module id="nuxeo-picture-view" assetpath="nuxeo-picture-view/">
