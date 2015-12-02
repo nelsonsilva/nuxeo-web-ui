@@ -13,6 +13,7 @@ Lesser General Public License for more details.
 
 Contributors:
     Nelson Silva <nsilva@nuxeo.com>
+    Gabriel Barata <gbarata@nuxeo.com>
 -->
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../nuxeo-document-edit/nuxeo-dublincore-edit.html">
@@ -25,19 +26,204 @@ Contributors:
 -->
 <dom-module id="nuxeo-document-view">
   <template>
-    <style>
+    <style is="custom-style">
+      :host {
+        display: block;
+      }
+
       .container {
         padding: 20px;
         width: 800px;
       }
+
+      .docview {
+        padding: 2.5rem 5rem;
+        box-sizing: border-box;
+      }
+
+      a {
+        color: #039be5;
+        text-decoration: none;
+      }
+
+      .row {
+        margin-bottom: 1rem;
+        box-sizing: inherit;
+      }
+
+      .sep {
+        border-top: 1px solid #e8e8e8;
+      }
+
+      .sideinfo {
+        padding: 0.75rem;
+        box-sizing: border-box;
+      }
+
+      .sidetitle {
+        color: #213f7d;
+        font-size: 1.64rem;
+      }
+
+      .badge {
+        position: relative;
+        display: inline-block;
+        text-transform: uppercase;
+        background-color: #00adff;
+        color: #fff;
+        padding: 0.2rem 0.4rem;
+        margin-right: 3px;
+        margin-bottom: 3px;
+        vertical-align: middle;
+        font-size: 0.9rem;
+        border-radius: 2px;
+      }
+
+      .icon {
+        --iron-icon-height: 0.9rem;
+        --iron-icon-width: 0.9rem;
+        margin-right: 0.2rem;
+      }
+
+      .sidecard {
+        width: 100%;
+        margin-bottom: 1em;
+      }
+
+      .cardcontent {
+        padding: 0.75rem 0rem;
+        box-sizing: border-box;
+      }
+
+      .docreator {
+        font-size: 1.2rem;
+      }
+
+      .startbutton {
+        position: relative;
+        display: inline-block;
+        text-transform: uppercase;
+        background-color: #f68500;
+        color: #fff;
+        padding: 0.75rem 1.5rem;
+        vertical-align: middle;
+        border-radius: 2px;
+      }
+
+      .auditcontent {
+        max-height: 10rem;
+        overflow-y: auto;
+      }
+
     </style>
 
-    <div class="container">
+    <div>
       <iron-pages id="doc-pages" selected="[[mode]]" attr-for-selected="name">
         <div name="view">
-          <span>[[document.title]]</span>
-        </div>
-        <div name="edit">
+
+          <nuxeo-resource id="workflowsRequest" auto path="/id/[[document.uid]]/@workflow" response="{{workflows}}"></nuxeo-resource>
+          <nuxeo-resource id="auditRequest" auto path="/id/[[document.uid]]/@audit" response="{{audit}}"></nuxeo-resource>
+
+          <div class="docview horizontal layout">
+            <div class="flex-2">
+              <nuxeo-picture-view document="{{document}}"></nuxeo-picture-view>
+            </div>
+            <div class="sideinfo vertical layout flex">
+              <template is="dom-if" if="[[_hasProcessInProgress(workflows)]]">
+                <paper-card class="sidecard">
+                  <div class="card-content">
+                    <div class="vertical layout cardcontent">
+                      <template is="dom-repeat" items="{{workflows.entries}}">
+                        <nuxeo-resource auto path="[[_getTaskPath(document, 'Administrator', item.id, item.workflowModelName)]]" response="{{tasks}}"></nuxeo-resource>
+                        <template is="dom-repeat" items="{{tasks.entries}}">
+                          <span class="layout horizontal">
+                            <iron-icon class="icon" icon="icons:assignment-turned-in"></iron-icon>
+                            You have a task to do before [[_formatDate(item.dueDate)]]
+                          </span>
+                        </template>
+                      </template>
+                    </div>
+                    <paper-button class="startbutton">Process</paper-button>
+                  </div>
+                </paper-card>
+              </template>
+              <paper-card class="sidecard">
+                <div class="card-content">
+                  <div class="vertical layout cardcontent">
+                    <span class="docreator">Created by <a href="nuxeo/user/[[document.properties.dc:creator]]">[[document.properties.dc:creator]]</a></span>
+                    <p>on [[_formatDate(document.properties.dc:created)]]</p>
+                  </div>
+                </div>
+              </paper-card>
+              <paper-card class="sidecard">
+                <div class="card-content">
+                  <p class="sidetitle">Contributors</p>
+                  <div class="horizontal layout wrap sep cardcontent">
+                    <template is="dom-repeat" items="[[document.properties.dc:contributors]]" as="contributor">
+                      <a href="nuxeo/users/[[contributor]]">
+                        <span class="badge layout horizontal center">
+                          <iron-icon class="icon" icon="icons:perm-identity"></iron-icon>
+                          [[contributor]]
+                        </span>
+                      </a>
+                    </template>
+                  </div>
+                </div>
+              </paper-card>
+              <template is="dom-if" if="[[_canStartProcess(workflows)]]">
+                <paper-card class="sidecard">
+                  <div class="card-content">
+                    <p class="sidetitle">Process</p>
+                    <div class="sep vertical layout">
+                      <div>
+                        <paper-dropdown-menu label="Start a process">
+                          <paper-menu class="dropdown-content" selected="{{selectedProcess}}">
+                            <template is="dom-repeat" items="[[processes]]" as="process">
+                              <paper-item>[[_getProcessLabel(process)]]</paper-item>
+                            </template>
+                          </paper-menu>
+                        </paper-dropdown-menu>
+                      </div>
+                      <div>
+                        <nuxeo-resource id="workflowRequest" path="/id/[[document.uid]]/@workflow"
+                                        data="{{workflowData}}"
+                                        response="{{workflowResponse}}"
+                                        headers='{"Content-Type":"application/json"}'></nuxeo-resource>
+                        <paper-button class="startbutton" on-tap="_startProcess">Start</paper-button>
+                      </div>
+                    </div>
+                  </div>
+                </paper-card>
+              </template>
+              <paper-card class="sidecard">
+                <div class="card-content">
+                  <p class="sidetitle">Tags</p>
+                  <div class="horizontal layout wrap sep cardcontent">
+                    <template is="dom-repeat" items="[[tags]]" as="tag">
+                      <span class="badge layout horizontal center">
+                        [[tag]]
+                      </span>
+                    </template>
+                  </div>
+                </div>
+              </paper-card>
+              <paper-card class="sidecard">
+                <div class="card-content">
+                  <p class="sidetitle">Activity</p>
+                  <div class="vertical layout sep cardcontent auditcontent">
+                    <template is="dom-repeat" items="[[audit.entries]]">
+                      <p>
+                        <a href="nuxeo/user/[[item.principalName]]">[[item.principalName]]</a>
+                        [[_getActivityDescription(item)]]
+                      </p>
+                    </template>
+                  </div>
+                </div>
+              </paper-card>
+            </div>
+          </div>
+        </div> <!-- view -->
+        <div name="edit" class="container">
           <nuxeo-document id="doc" doc-id="[[document.uid]]" data="{{document}}" response="{{document}}"></nuxeo-document>
           <nuxeo-dublincore-edit document="[[document]]"></nuxeo-dublincore-edit>
           <nuxeo-versioning-edit document="[[document]]" versioningType="{{versioningType}}"></nuxeo-versioning-edit>
@@ -47,7 +233,6 @@ Contributors:
       </iron-pages>
     </div>
   </template>
-
   <script>
     (function() {
       'use strict';
@@ -63,6 +248,23 @@ Contributors:
           mode: {
             type: String,
             value: 'view'
+          },
+
+          processes: {
+            type: Array
+          },
+
+          processesLabels: {
+            type: Object
+          },
+
+          tags: {
+            type: Object
+          },
+
+          selectedProcess: {
+            type: Number,
+            value: 0
           }
         },
 
@@ -78,6 +280,96 @@ Contributors:
 
         _cancel: function() {
           this.mode = 'view';
+        },
+
+        ready: function() {
+          this.processes = ['ParallelDocumentReview', 'SerialDocumentReview'];
+          this.processLabels = {
+            'ParallelDocumentReview': 'Parallel document review',
+            'SerialDocumentReview': 'Serial document review'
+          };
+          this.tags = ['tag1', 'tag2', 'tag3'];
+        },
+
+        _getProcessLabel: function(process) {
+          return this.processLabels[process];
+        },
+
+        _formatDate: function(date) {
+          return moment(date).format('MMMM D, YYYY');
+        },
+
+        _getActivityDescription: function(auditEntry) {
+          // we should be getting this from somewhere else
+          var description;
+          switch (auditEntry.eventId) {
+            case 'documentModified':
+              description = ' modified the document';
+              break;
+            case 'documentSecurityUpdated':
+              description = ' update security settings';
+              break;
+            case 'workflowCanceled':
+              description = ' canceled a workflow';
+              break;
+            case 'workflowTaskCompleted':
+              description = ' completed a workflow';
+              break;
+            case 'workflowTaskAssigned':
+              description = ' started a workflow';
+              break;
+            case 'auditLogRoute':
+              description = ' requested audit';
+              break;
+            case 'documentUnlocked':
+              description = ' unlocked the document';
+              break;
+            case 'documentLocked':
+              description = ' locked the document';
+              break;
+            case 'download':
+              description = ' downloaded the document';
+              break;
+            default:
+              description = ' did ' + auditEntry.eventId;
+              break;
+          }
+          return description;
+        },
+
+        _getTaskPath: function(document, user, workflowId, workflowName) {
+          var path = '/id/' + document.uid + '/@task?';
+          if (user) {
+            path += 'userId=' + user;
+          }
+          if (workflowId) {
+            path += (user ? '&' : '') + 'workflowInstanceId=' + workflowId;
+          }
+          if (workflowName) {
+            path += (user || workflowId ? '&' : '') + 'workflowModelName=' + workflowName;
+          }
+          return path;
+        },
+
+        _hasProcessInProgress: function(workflows) {
+          return (workflows !== null) && (workflows.entries.length > 0);
+        },
+
+        _canStartProcess: function(workflows) {
+          return (workflows !== null) && (workflows.entries.length === 0);
+        },
+
+        _startProcess: function() {
+          var workflow = document.getElementById('workflowRequest'); // not working: this.$.workflowRequest;
+          var workflows = document.getElementById('workflowsRequest');
+
+          this.workflowData = {
+            'entity-type': 'workflow',
+            'workflowModelName': this.processes[this.selectedProcess],
+            'attachedDocumentIds': [this.document.uid]
+          };
+          workflow.post();
+          workflows.get();
         }
       });
     })();
