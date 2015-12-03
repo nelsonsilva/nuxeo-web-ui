@@ -242,6 +242,13 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
 
 
 
+
+
+
+
+
+
+
 </head><body><div hidden by-vulcanize=""><dom-module id="iron-icon" assetpath="../bower_components/iron-icon/">
 
   <style>:host{@apply(--layout-inline);@apply(--layout-center-center);position:relative;vertical-align:middle;fill:var(--iron-icon-fill-color,currentcolor);stroke:var(--iron-icon-stroke-color,none);width:var(--iron-icon-width,24px);height:var(--iron-icon-height,24px)}</style>
@@ -1501,14 +1508,13 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
 </dom-module>
 <dom-module id="nuxeo-document-view" assetpath="nuxeo-document-view/">
   <template>
-    <style is="custom-style">.docview,textarea{box-sizing:border-box}:host{display:block}.container{padding:20px;width:800px}.docview{padding:2.5rem 5rem}a{color:#039be5;text-decoration:none}label{font-weight:700;width:200px}textarea{background:#fff;border:1px solid #c6c6c6;border-radius:3px;box-shadow:0 1px 1px rgba(0,0,0,.07) inset;display:inline-block;font-size:1em;margin-bottom:.5em;padding:.5em}.badge,.startbutton{position:relative;display:inline-block;text-transform:uppercase;vertical-align:middle;border-radius:2px}.row{margin-bottom:1rem;box-sizing:inherit}.sep{border-top:1px solid #e8e8e8}.sideinfo{padding:.75rem;box-sizing:border-box}.sidetitle{color:#213f7d;font-size:1.64rem}.badge{background-color:#00adff;color:#fff;padding:.2rem .4rem;margin-right:3px;margin-bottom:3px;text-align:center;font-size:.9rem}.graybadge{background-color:#eee;color:#999}.icon{--iron-icon-height:0.9rem;--iron-icon-width:0.9rem;margin-right:.2rem}.sidecard{width:100%;margin-bottom:1em}.cardcontent{padding:.75rem 0;box-sizing:border-box}.docreator{font-size:1.2rem}.startbutton{background-color:#f68500;color:#fff;padding:.75rem 1.5rem}.auditcontent{max-height:10rem;overflow-y:auto}</style>
+    <style is="custom-style">.docview,textarea{box-sizing:border-box}:host{display:block}.container{padding:20px;width:800px}.docview{padding:2.5rem 5rem}a{color:#039be5;text-decoration:none}label{font-weight:700;width:200px}textarea{background:#fff;border:1px solid #c6c6c6;border-radius:3px;box-shadow:0 1px 1px rgba(0,0,0,.07) inset;display:inline-block;font-size:1em;margin-bottom:.5em;padding:.5em}.row{margin-bottom:1rem;box-sizing:inherit}.sideinfo{padding:.75rem;box-sizing:border-box}.sidecard{margin-bottom:1em}.cardcontent{padding:.75rem 0;box-sizing:border-box}.docreator{font-size:1.2rem}</style>
 
     <div>
       <iron-pages id="doc-pages" selected="[[mode]]" attr-for-selected="name">
         <div name="view">
 
           <nuxeo-resource id="workflowsRequest" auto="" path="/id/[[document.uid]]/@workflow" response="{{workflows}}"></nuxeo-resource>
-          <nuxeo-resource id="auditRequest" auto="" path="/id/[[document.uid]]/@audit" response="{{audit}}"></nuxeo-resource>
 
           <div class="docview horizontal layout">
             <div id="document-view" class="flex-2">
@@ -1516,31 +1522,16 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
               
             </div>
             <div class="sideinfo vertical layout flex">
-              <template is="dom-if" if="[[_hasProcessInProgress(workflows)]]">
+              <template is="dom-if" if="[[hasProcessInProgress]]">
                 <paper-card class="sidecard">
                   <div class="card-content">
-                    <div class="vertical layout cardcontent">
-                      <template is="dom-repeat" items="{{workflows.entries}}">
-                        <nuxeo-resource auto="" path="[[_getTaskPath(document, 'Administrator', item.id, item.workflowModelName)]]" response="{{tasks}}"></nuxeo-resource>
-                        <template is="dom-repeat" items="{{tasks.entries}}">
-                          <span class="layout horizontal">
-                            <iron-icon class="icon" icon="icons:assignment-turned-in"></iron-icon>
-                            You have a task to do before [[_formatDate(item.dueDate)]]
-                          </span>
-                        </template>
-                      </template>
-                    </div>
-                    <paper-button class="startbutton">Process</paper-button>
+                    <nuxeo-task-view document="{{document}}" workflows="{{workflows}}"></nuxeo-task-view>
                   </div>
                 </paper-card>
               </template>
               <paper-card class="sidecard">
                 <div class="card-content">
-                  <p class="sidetitle">Status</p>
-                  <div class="horizontal layout sep wrap cardcontent">
-                    <span class="badge">[[document.state]]</span>
-                    <span class="badge graybadge">Version [[document.properties.uid:major_version]].[[document.properties.uid:minor_version]]</span>
-                  </div>
+                  <nuxeo-document-status document="{{document}}"></nuxeo-document-status>
                 </div>
               </paper-card>
               <paper-card class="sidecard">
@@ -1553,64 +1544,24 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
               </paper-card>
               <paper-card class="sidecard">
                 <div class="card-content">
-                  <p class="sidetitle">Contributors</p>
-                  <div class="horizontal layout wrap sep cardcontent">
-                    <template is="dom-repeat" items="[[document.properties.dc:contributors]]" as="contributor">
-                      <a href="nuxeo/users/[[contributor]]">
-                        <span class="badge layout horizontal center">
-                          <iron-icon class="icon" icon="icons:perm-identity"></iron-icon>
-                          [[contributor]]
-                        </span>
-                      </a>
-                    </template>
-                  </div>
+                  <nuxeo-dublincore-contrib document="{{document}}"></nuxeo-dublincore-contrib>
                 </div>
               </paper-card>
-              <template is="dom-if" if="[[_canStartProcess(workflows)]]">
+              <template is="dom-if" if="[[canStartProcess]]">
                 <paper-card class="sidecard">
                   <div class="card-content">
-                    <p class="sidetitle">Process</p>
-                    <div class="sep vertical layout">
-                      <div>
-                        <paper-dropdown-menu label="Start a process">
-                          <paper-menu class="dropdown-content" selected="{{selectedProcess}}" attr-for-selected="key">
-                            <template is="dom-repeat" items="[[processes]]" as="process">
-                              <paper-item key="[[process.key]]">[[i18n(process.label)]]</paper-item>
-                            </template>
-                          </paper-menu>
-                        </paper-dropdown-menu>
-                      </div>
-                      <div>
-                        <nuxeo-resource id="workflowRequest" path="/id/[[document.uid]]/@workflow" data="{{workflowData}}" response="{{workflowResponse}}" headers="{&quot;Content-Type&quot;:&quot;application/json&quot;}"></nuxeo-resource>
-                        <paper-button class="startbutton" on-tap="_startProcess">Start</paper-button>
-                      </div>
-                    </div>
+                    <nuxeo-workflow-start document="{{document}}" workflows="{{workflows}}"></nuxeo-workflow-start>
                   </div>
                 </paper-card>
               </template>
               <paper-card class="sidecard">
                 <div class="card-content">
-                  <p class="sidetitle">Tags</p>
-                  <div class="horizontal layout wrap sep cardcontent">
-                    <template is="dom-repeat" items="[[tags]]" as="tag">
-                      <span class="badge layout horizontal center">
-                        [[tag]]
-                      </span>
-                    </template>
-                  </div>
+                  <nuxeo-document-tags class="tags"></nuxeo-document-tags>
                 </div>
               </paper-card>
               <paper-card class="sidecard">
                 <div class="card-content">
-                  <p class="sidetitle">Activity</p>
-                  <div class="vertical layout sep cardcontent auditcontent">
-                    <template is="dom-repeat" items="[[audit.entries]]">
-                      <p>
-                        <a href="nuxeo/user/[[item.principalName]]">[[item.principalName]]</a>&nbsp;
-                        [[i18n('activity', item.eventId)]]
-                      </p>
-                    </template>
-                  </div>
+                  <nuxeo-document-activity class="activity" document="{{document}}"></nuxeo-document-activity>
                 </div>
               </paper-card>
             </div>
@@ -1633,7 +1584,7 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
       </iron-pages>
     </div>
   </template>
-  <script>!function(){"use strict";Polymer({is:"nuxeo-document-view",properties:{document:{type:Object,observer:"_documentChanged"},mode:{type:String,value:"view"},processes:{type:Array,value:[{key:"ParallelDocumentReview",label:"wf.parallelDocumentReview.ParallelDocumentReview"},{key:"SerialDocumentReview",label:"wf.serialDocumentReview.SerialDocumentReview"}]},processesLabels:{type:Object},tags:{type:Object,value:["tag1","tag2","tag3"]},selectedProcess:{type:String},versioningType:{type:String},headers:{type:Object,computed:"_computeHeaders(versioningType)"}},observers:["_updateLayout(document, mode)"],_computeHeaders:function(e){return{"X-Versioning-Option":e}},_documentChanged:function(){this.mode="view"},_layoutFor:function(e,t){var o=Polymer.CaseMap.camelToDashCase(e.type).toLowerCase();return["nuxeo",o,t].join("-")},_isRegistered:function(e){return document.createElement(e).constructor!==HTMLElement},_createLayout:function(){var e=this._layoutFor(this.document,this.mode),t=document.createElement(e),o=this.$["document-"+this.mode];o.hasChildNodes()?o.replaceChild(t,o.firstChild):o.appendChild(t),t.document=this.document},_updateLayout:function(){var e=this._layoutFor(this.document,this.mode);if(this._isRegistered(e))this._createLayout();else{var t=this.resolveUrl("../nuxeo-document-"+this.mode+"/"+e+".html");this.importHref(t,this._createLayout.bind(this),function(){console.error("Failed to find "+this.mode+" layout for "+this.document.type)})}},_save:function(){var e=document.getElementById("doc");e.put(),this.mode="view"},_cancel:function(){this.mode="view"},ready:function(){this.selectedProcess=this.processes[0].key},_formatDate:function(e){return moment(e).format("MMMM D, YYYY")},_getTaskPath:function(e,t,o,n){var s="/id/"+e.uid+"/@task?";return t&&(s+="userId="+t),o&&(s+=(t?"&":"")+"workflowInstanceId="+o),n&&(s+=(t||o?"&":"")+"workflowModelName="+n),s},_hasProcessInProgress:function(e){return null!==e&&e.entries.length>0},_canStartProcess:function(e){return null!==e&&0===e.entries.length},_startProcess:function(){var e=document.getElementById("workflowRequest"),t=document.getElementById("workflowsRequest");this.workflowData={"entity-type":"workflow",workflowModelName:this.selectedProcess,attachedDocumentIds:[this.document.uid]},e.post(),t.get()}})}();</script>
+  <script>!function(){"use strict";Polymer({is:"nuxeo-document-view",properties:{document:{type:Object,observer:"_documentChanged"},mode:{type:String,value:"view"},workflows:{type:Object,observer:"_workflowsChanged"},canStartProcess:{type:Boolean},hasProcessInProgress:{type:Boolean},versioningType:{type:String},headers:{type:Object,computed:"_computeHeaders(versioningType)"}},observers:["_updateLayout(document, mode)"],_computeHeaders:function(e){return{"X-Versioning-Option":e}},_documentChanged:function(){this.mode="view"},_layoutFor:function(e,t){var o=Polymer.CaseMap.camelToDashCase(e.type).toLowerCase();return["nuxeo",o,t].join("-")},_isRegistered:function(e){return document.createElement(e).constructor!==HTMLElement},_createLayout:function(){var e=this._layoutFor(this.document,this.mode),t=document.createElement(e),o=this.$["document-"+this.mode];o.hasChildNodes()?o.replaceChild(t,o.firstChild):o.appendChild(t),t.document=this.document},_updateLayout:function(){var e=this._layoutFor(this.document,this.mode);if(this._isRegistered(e))this._createLayout();else{var t=this.resolveUrl("../nuxeo-document-"+this.mode+"/"+e+".html");this.importHref(t,this._createLayout.bind(this),function(){console.error("Failed to find "+this.mode+" layout for "+this.document.type)})}},_save:function(){var e=document.getElementById("doc");e.put(),this.mode="view"},_cancel:function(){this.mode="view"},_workflowsChanged:function(){this.canStartProcess=this.workflows&&0===this.workflows.entries.length,this.hasProcessInProgress=this.workflows&&this.workflows.entries.length>0},_formatDate:function(e){return moment(e).format("MMMM D, YYYY")}})}();</script>
 
 </dom-module>
 <dom-module id="nuxeo-document-content-view" assetpath="nuxeo-document-content-view/">
@@ -1719,4 +1670,123 @@ switch(this.day()){case 0:return"[v] [nedeljo] [ob] LT";case 3:return"[v] [sredo
   </template>
   <script>Polymer({is:"nuxeo-task-list",properties:{count:{type:Number,value:3,notify:!0}}});</script>
 </dom-module>
-</div></body></html>
+<dom-module id="nuxeo-document-activity" assetpath="nuxeo-document-activity/">
+
+  <template>
+    <style>:host{display:block}.audit_user a{color:#039be5;text-decoration:none;@apply(--nuxeo-document-activity-user-theme)}.sep{border-top:1px solid #e8e8e8;@apply(--nuxeo-document-activity-sep-theme)}.content{padding:.75rem 0;box-sizing:border-box;@apply(--nuxeo-document-activity-content-theme)}.title{color:#213f7d;font-size:1.64rem;@apply(--nuxeo-document-activity-title-theme)}.audit{max-height:10rem;overflow-y:auto;@apply(--nuxeo-document-activity-audit-theme)}</style>
+
+    <p class="title">Activity</p>
+    <div class="vertical layout sep content audit">
+      <nuxeo-resource id="auditRequest" auto="" path="/id/[[document.uid]]/@audit" response="{{audit}}"></nuxeo-resource>
+      <template is="dom-repeat" items="[[audit.entries]]">
+        <p>
+          <span class="audit_user"><a href="nuxeo/user/[[item.principalName]]">[[item.principalName]]</a>&nbsp;</span>
+          <span>[[i18n('activity', item.eventId)]]</span>
+        </p>
+      </template>
+    </div>
+  </template>
+
+  <script>!function(){"use strict";Polymer({is:"nuxeo-document-activity",properties:{document:{type:Object}}})}();</script>
+
+</dom-module><dom-module id="nuxeo-document-status" assetpath="nuxeo-document-status/">
+
+  <template>
+    <style>:host{display:block}.state,.version{position:relative;display:inline-block;text-transform:uppercase;padding:.2rem .4rem;margin-right:3px;margin-bottom:3px;vertical-align:middle;text-align:center;font-size:.9rem;border-radius:2px}.state{background-color:#00adff;color:#fff;@apply(--nuxeo-document-status-state-theme)}.version{background-color:#eee;color:#999;@apply(--nuxeo-document-status-version-theme)}.sep{border-top:1px solid #e8e8e8;@apply(--nuxeo-document-status-sep-theme)}.content{padding:.75rem 0;box-sizing:border-box;@apply(--nuxeo-document-status-content-theme)}.title{color:#213f7d;font-size:1.64rem;@apply(--nuxeo-document-status-title-theme)}</style>
+
+    <p class="title">Status</p>
+    <div class="horizontal layout sep wrap content">
+      <span class="state">[[document.state]]</span>
+      <span class="version">Version [[document.properties.uid:major_version]].[[document.properties.uid:minor_version]]</span>
+    </div>
+  </template>
+
+  <script>!function(){"use strict";Polymer({is:"nuxeo-document-status",properties:{document:{type:Object}}})}();</script>
+
+</dom-module><dom-module id="nuxeo-document-tags" assetpath="nuxeo-document-tags/">
+
+  <template>
+    <style>:host{display:block}.badge{position:relative;display:inline-block;text-transform:uppercase;background-color:#00adff;color:#fff;padding:.2rem .4rem;margin-right:3px;margin-bottom:3px;vertical-align:middle;text-align:center;font-size:.9rem;border-radius:2px;@apply(--nuxeo-document-tags-theme)}.sep{border-top:1px solid #e8e8e8;@apply(--nuxeo-document-tags-sep-theme)}.content{padding:.75rem 0;box-sizing:border-box;@apply(--nuxeo-document-tags-content-theme)}.title{color:#213f7d;font-size:1.64rem;@apply(--nuxeo-document-tags-title-theme)}</style>
+
+    <p class="title">Tags</p>
+    <div class="horizontal layout wrap sep content">
+      <template is="dom-repeat" items="[[tags]]" as="tag">
+        <span class="badge layout horizontal center">
+          [[tag]]
+        </span>
+      </template>
+    </div>
+  </template>
+
+  <script>!function(){"use strict";Polymer({is:"nuxeo-document-tags",properties:{document:{type:Object},tags:{type:Object,value:["tag1","tag2","tag3"]}}})}();</script>
+
+</dom-module><dom-module id="nuxeo-dublincore-contrib" assetpath="nuxeo-dublincore-contrib/">
+
+  <template>
+    <style>:host{display:block}.badge{position:relative;display:inline-block;text-transform:uppercase;background-color:#00adff;color:#fff;text-decoration:none;padding:.2rem .4rem;margin-right:3px;margin-bottom:3px;vertical-align:middle;text-align:center;font-size:.9rem;border-radius:2px;@apply(--nuxeo-dublincore-contrib-theme)}.icon{--iron-icon-height:0.9rem;--iron-icon-width:0.9rem;margin-right:.2rem;@apply(--nuxeo-dublincore-contrib-icon-theme)}.sep{border-top:1px solid #e8e8e8;@apply(--nuxeo-dublincore-contrib-sep-theme)}.content{padding:.75rem 0;box-sizing:border-box;@apply(--nuxeo-dublincore-contrib-content-theme)}.title{color:#213f7d;font-size:1.64rem;@apply(--nuxeo-dublincore-contrib-title-theme)}</style>
+
+
+    <p class="title">Contributors</p>
+    <div class="horizontal layout wrap sep content">
+      <template is="dom-repeat" items="[[document.properties.dc:contributors]]" as="contributor">
+        <a class="badge" href="nuxeo/users/[[contributor]]">
+          <span class="layout horizontal center">
+            <iron-icon class="icon" icon="icons:perm-identity"></iron-icon>
+            [[contributor]]
+          </span>
+        </a>
+      </template>
+    </div>
+  </template>
+
+  <script>!function(){"use strict";Polymer({is:"nuxeo-dublincore-contrib",properties:{document:{type:Object}}})}();</script>
+
+</dom-module><dom-module id="nuxeo-task-view" assetpath="nuxeo-task-view/">
+
+  <template>
+    <style>:host{display:block}.startbutton{position:relative;display:inline-block;text-transform:uppercase;background-color:#f68500;color:#fff;padding:.75rem 1.5rem;vertical-align:middle;border-radius:2px;@apply(--nuxeo-task-view-button-theme);margin-top:.5rem}.icon{--iron-icon-height:0.9rem;--iron-icon-width:0.9rem;margin-right:.2rem;@apply(--nuxeo-dublincore-contrib-icon-theme)}.content{padding:.75rem 0;box-sizing:border-box;@apply(--nuxeo-task-view-content-theme)}</style>
+
+    <div class="vertical layout content">
+      <template is="dom-repeat" items="{{workflows.entries}}">
+        <nuxeo-resource auto="" path="[[_getTaskPath(document, 'Administrator', item.id, item.workflowModelName)]]" response="{{tasks}}"></nuxeo-resource>
+        <template is="dom-repeat" items="{{tasks.entries}}">
+          <span class="layout horizontal">
+            <iron-icon class="icon" icon="icons:assignment-turned-in"></iron-icon>
+            You have a task to do before [[_formatDate(item.dueDate)]]
+          </span>
+        </template>
+      </template>
+      <div>
+        <paper-button class="startbutton">Process</paper-button>
+      </div>
+    </div>
+  </template>
+
+  <script>!function(){"use strict";Polymer({is:"nuxeo-task-view",properties:{document:{type:Object},workflows:{type:Object}},_formatDate:function(t){return moment(t).format("MMMM D, YYYY")},_getTaskPath:function(t,e,o,r){var n="/id/"+t.uid+"/@task?";return e&&(n+="userId="+e),o&&(n+=(e?"&":"")+"workflowInstanceId="+o),r&&(n+=(e||o?"&":"")+"workflowModelName="+r),n}})}();</script>
+
+</dom-module><dom-module id="nuxeo-workflow-start" assetpath="nuxeo-workflow-start/">
+
+  <template>
+    <style>:host{display:block}.startbutton{position:relative;display:inline-block;text-transform:uppercase;background-color:#f68500;color:#fff;padding:.75rem 1.5rem;vertical-align:middle;border-radius:2px;@apply(--nuxeo-workflow-start-button-theme)}.title{color:#213f7d;font-size:1.64rem;@apply(--nuxeo-workflow-start-title-theme)}</style>
+
+    <p class="title">Process</p>
+    <div class="sep vertical layout">
+      <div>
+        <paper-dropdown-menu label="Start a process">
+          <paper-menu class="dropdown-content" selected="{{selectedProcess}}" attr-for-selected="key">
+            <template is="dom-repeat" items="[[processes]]" as="process">
+              <paper-item key="[[process.key]]">[[i18n(process.label)]]</paper-item>
+            </template>
+          </paper-menu>
+        </paper-dropdown-menu>
+      </div>
+      <div>
+        <nuxeo-resource id="workflowRequest" path="/id/[[document.uid]]/@workflow" data="{{workflowData}}" response="{{workflowResponse}}" headers="{&quot;Content-Type&quot;:&quot;application/json&quot;}"></nuxeo-resource>
+        <paper-button class="startbutton" on-tap="_startProcess">Start</paper-button>
+      </div>
+    </div>
+  </template>
+
+  <script>!function(){"use strict";Polymer({is:"nuxeo-workflow-start",properties:{document:{type:Object},workflows:{type:Object},selectedProcess:{type:String},processes:{type:Array,value:[{key:"ParallelDocumentReview",label:"wf.parallelDocumentReview.ParallelDocumentReview"},{key:"SerialDocumentReview",label:"wf.serialDocumentReview.SerialDocumentReview"}]}},ready:function(){this.selectedProcess=this.processes[0].key},_startProcess:function(){var e=document.getElementById("workflowRequest"),t=document.getElementById("workflowsRequest");this.workflowData={"entity-type":"workflow",workflowModelName:this.selectedProcess,attachedDocumentIds:[this.document.uid]},e.post().then(function(){t.get()})}})}();</script>
+
+</dom-module></div></body></html>

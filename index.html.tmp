@@ -74,7 +74,7 @@ Lesser General Public License for more details.
 <body unresolved class="fullbleed layout vertical">
   <span id="browser-sync-binding"></span>
 
-  <nuxeo-app base-url="/nuxeo-web-ui/"></nuxeo-app>
+  <nuxeo-app base-url="/"></nuxeo-app>
 
   <!-- Uncomment next block to enable Service Worker support (1/2) -->
   <!--
