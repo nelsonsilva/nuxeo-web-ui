@@ -325,6 +325,32 @@ gulp.task('deploy-gh-pages', function() {
       .pipe($.ghPages());
 });
 
+gulp.task('nuxeo-package-template', function() {
+  return gulp.src('package/**')
+    .pipe($.template(require('./package.json')))
+    .pipe(gulp.dest('.tmp/package'));
+});
+
+gulp.task('nuxeo-package-resources', ['default', 'nuxeo-package-template'], function() {
+  return gulp.src(dist('**/*'))
+    .pipe(gulp.dest('.tmp/package/bundle/web/nuxeo.war/ui'));
+});
+
+gulp.task('nuxeo-bundle-jar', ['nuxeo-package-resources'], function() {
+  return gulp.src('.tmp/package/bundle/**')
+		.pipe($.zip('bundle.jar'))
+		.pipe(gulp.dest('.tmp/package'));
+});
+
+gulp.task('nuxeo-package', ['nuxeo-bundle-jar'], function() {
+  return gulp.src([
+      '.tmp/package/*.xml',
+      '.tmp/package/bundle.jar'
+    ])
+    .pipe($.zip('marketplace-nuxeo-web-ui.zip'))
+    .pipe(gulp.dest('.'));
+});
+
 // Load tasks for web-component-tester
 // Adds tasks for `gulp test:local` and `gulp test:remote`
 require('web-component-tester').gulp.init(gulp);

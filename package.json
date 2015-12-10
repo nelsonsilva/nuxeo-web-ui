@@ -1,4 +1,10 @@
 {
+  "name": "nuxeo-web-ui",
+  "description": "Ongoing work to build a new Nuxeo Web UI",
+  "version": "0.0.1",
+  "homepage": "http://www.nuxeo.com",
+  "license": "LGPL 2.1",
+  "vendor": "Nuxeo",
   "private": true,
   "devDependencies": {
     "browser-sync": "^2.10.0",
@@ -24,9 +30,11 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-size": "^2.0.0",
+    "gulp-template": "^3.1.0",
     "gulp-uglify": "^1.5.1",
     "gulp-useref": "^3.0.3",
     "gulp-vulcanize": "^6.1.0",
+    "gulp-zip": "^3.0.2",
     "jshint": "^2.8.0",
     "jshint-stylish": "^2.1.0",
     "merge-stream": "^1.0.0",
@@ -42,5 +50,11 @@
   },
   "engines": {
     "node": ">=0.10.0"
+  },
+  "nuxeo": {
+    "platforms": [
+      "cap-8.1-SNAPSHOT",
+      "cap-8.1-SNAPSHOT-HF*"
+    ]
   }
 }
