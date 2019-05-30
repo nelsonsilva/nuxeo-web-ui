@@ -2,9 +2,9 @@ import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { LayoutBehavior } from '@nuxeo/nuxeo-ui-elements/nuxeo-layout-behavior.js';
 import '@nuxeo/nuxeo-elements/nuxeo-element.js';
-{{#each imports}}
+{{!-- {{#each imports}}
 import '@nuxeo/nuxeo-ui-elements/widgets/{{this}}.js';
-{{/each}}
+{{/each}} --}}
 
 window.customElements.define('{{element}}', class extends mixinBehaviors([LayoutBehavior], Nuxeo.Element) {
 
@@ -15,6 +15,15 @@ window.customElements.define('{{element}}', class extends mixinBehaviors([Layout
   static get template() {
     return html`
       <style>
+
+        {{#if style}}
+        :host {
+          {{#each style}}
+            {{@key}}: {{this}};
+          {{/each}}
+        }
+        {{/if}}
+
         *[role='widget'] {
           margin-bottom: 16px;
         }

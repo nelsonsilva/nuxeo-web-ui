@@ -39,7 +39,8 @@ const FIELD_MAPPER = (defaultMode = 'view') => (def) => {
   const mode = def.mode || defaultMode;
   const [prefix, property] = field.split(':');
   const schema = Object.values(SERVER_REGISTRY.schemas).find((s) => s['@prefix'] === prefix);
-  const type = schema[property];
+  const propDef = schema[property];
+  const type = typeof propDef == 'string' ? propDef : propDef.type;
 
   // prepare widget definition
   const wdef = _.clone(UI_REGISTRY.templates[type][mode]);
@@ -109,9 +110,41 @@ const layoutTemplate = (template) =>
       });
     }
 
+    const style = {};
+    const { grid } = model;
+    if (grid) {
+      // defaults
+      Object.assign(style, {
+        display: 'grid',
+        'grid-gap': grid.gap || '5px',
+      });
+      // grid-template-columns
+      const { columns } = grid;
+      if (columns) {
+        // default to 'fr' units
+        const unit = (s) => (typeof s === 'number' ? `${s}fr` : s);
+
+        let cols;
+        if (Array.isArray(columns)) {
+          cols = columns
+            .map((c) => {
+              if (Array.isArray(c)) {
+                const [min, max] = c;
+                return `minmax(${unit(min)}, ${unit(max)}`;
+              }
+              return unit(c);
+            })
+            .join(' ');
+        } else {
+          cols = `repeat(${columns}, 1fr)`;
+        }
+        style['grid-template-columns'] = cols;
+      }
+    }
+
     const imports = [...new Set(elements.filter((el) => el.is.indexOf('-') > -1).map((el) => el.is))];
 
-    return TEMPLATE[template]({ imports, element, elements, properties });
+    return TEMPLATE[template]({ imports, element, style, elements, properties });
   };
 
 const tmplFunctions = {};
