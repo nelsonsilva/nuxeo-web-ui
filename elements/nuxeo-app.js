@@ -75,7 +75,42 @@ import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
 import { importHref } from '@nuxeo/nuxeo-ui-elements/import-href.js';
 
+import { client } from '@nuxeo/nuxeo-elements/graphql-client';
+import gql from 'graphql-tag';
 import { Performance } from './performance.js';
+
+const USER_QUERY = gql`
+  query user($id: ID) {
+    user(id: $id) {
+      id
+      extendedGroups {
+        name
+        label
+      }
+      isAdministrator
+      isAnonymous
+      favorites {
+        entries {
+          ... on Document {
+            uid
+            title
+            properties
+            contextParameters(enrichers: { document: ["thumbnail"] })
+          }
+        }
+      }
+      workspace {
+        uid
+        title
+      }
+      tasks(pagination: { pageSize: 1 }) {
+        resultsCount
+      }
+      properties
+      contextParameters(enrichers: { user: ["userprofile"] })
+    }
+  }
+`;
 
 // temporary extensible doc type registry
 window.nuxeo = window.nuxeo || {};
@@ -278,16 +313,16 @@ Polymer({
 
     <nuxeo-expired-session message="[[i18n('app.expiredSession.message')]]"></nuxeo-expired-session>
 
-    <nuxeo-connection id="nxcon" user="{{currentUser}}" url="{{url}}"></nuxeo-connection>
+    <nuxeo-connection id="nxcon" on-connected="_onConnected" url="{{url}}"></nuxeo-connection>
 
     <nuxeo-document id="doc" doc-id="[[docId]]" doc-path="[[docPath]]"></nuxeo-document>
 
     <nuxeo-sardine hidden></nuxeo-sardine>
 
-    <nuxeo-operation id="userWorkspace" op="User.GetUserWorkspace"></nuxeo-operation>
+    <!--nuxeo-operation id="userWorkspace" op="User.GetUserWorkspace"></nuxeo-operation-->
     <nuxeo-operation id="moveDocumentsOp" sync-indexing></nuxeo-operation>
 
-    <nuxeo-task-page-provider id="tasksProvider" page-size="1"></nuxeo-task-page-provider>
+    <!-- nuxeo-task-page-provider id="tasksProvider" page-size="1"></nuxeo-task-page-provider-->
     <nuxeo-resource
       id="task"
       path="/task/[[currentTaskId]]"
@@ -375,7 +410,7 @@ Polymer({
         <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" selected-attribute="visible">
           <nuxeo-slot name="PAGES" model="[[actionContext]]"></nuxeo-slot>
 
-          <nuxeo-home name="home"></nuxeo-home>
+          <nuxeo-home name="home" user="[[currentUser]]"></nuxeo-home>
 
           <nuxeo-browser
             name="browse"
@@ -521,7 +556,6 @@ Polymer({
 
     currentUser: {
       type: Object,
-      observer: '_observeCurrentUser',
     },
 
     userWorkspace: {
@@ -716,6 +750,7 @@ Polymer({
       })
       .catch((err) => {
         this.showError(err.status, this.i18n('browse.error'), err.message);
+        throw err;
       });
   },
 
@@ -992,16 +1027,16 @@ Polymer({
     this.fire('document-updated');
   },
 
-  _observeCurrentUser() {
-    if (this.currentUser) {
-      this.$.userWorkspace.execute().then((response) => {
-        this.userWorkspace = response.path;
+  _onConnected() {
+    client
+      .query({
+        query: USER_QUERY,
+      })
+      .then(({ data: { user } }) => {
+        this.currentUser = user;
+        this.userWorkspace = user.worspace;
+        this.taskCount = user.tasks.resultsCount;
       });
-      this.$.tasksProvider.params = {
-        userId: this.currentUser.id,
-      };
-      this._fetchTaskCount();
-    }
   },
 
   _displayUser(user) {

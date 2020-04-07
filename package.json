@@ -143,6 +143,10 @@
     "@polymer/paper-tooltip": "^3.0.0",
     "@polymer/polymer": "^3.0.0",
     "@webcomponents/html-imports": "^1.2.0",
+    "apollo-cache-inmemory": "^1.6.5",
+    "apollo-link-batch-http": "^1.2.13",
+    "apollo-link-http": "^1.5.16",
+    "apollo-link-ws": "^1.0.19",
     "aws-sdk": "^2.420.0",
     "d3": "^4.13.0",
     "dotenv": "^8.0.0",
@@ -152,6 +156,7 @@
     "jquery": "^3.3.1",
     "jsondiffpatch": "^0.3.11",
     "jsplumb": "^2.9.0",
+    "subscriptions-transport-ws": "^0.9.16",
     "three": "~0.81.0",
     "uuid": "^3.3.2",
     "web-animations-js": "^2.3.1"

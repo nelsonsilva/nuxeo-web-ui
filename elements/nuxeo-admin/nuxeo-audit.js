@@ -63,7 +63,6 @@ Polymer({
       }
     </style>
 
-    <nuxeo-audit-page-provider id="provider" page-size="40" provider-name="EVENTS_VIEW"></nuxeo-audit-page-provider>
     <nuxeo-page>
       <div slot="header">
         <span class="flex">[[i18n('audit.heading')]]</span>
@@ -116,6 +115,11 @@ Polymer({
         </nuxeo-card>
 
         <nuxeo-card>
+          <nuxeo-audit-page-provider
+            id="provider"
+            page-size="40"
+            provider-name="EVENTS_VIEW"
+          ></nuxeo-audit-page-provider>
           <nuxeo-data-table id="table" paginable nx-provider="provider" empty-label="[[i18n('audit.empty')]]">
             <nuxeo-data-table-column name="[[i18n('audit.performedAction')]]" sort-by="eventId">
               <template>[[_formati18n('eventType.', item.eventId)]]</template>
@@ -210,7 +214,7 @@ Polymer({
 
   _refresh() {
     if (this.visible) {
-      this.$.provider.params = this._buildParams();
+      this.root.getElementById('provider').params = this._buildParams();
       this.$.table.fetch();
     }
   },

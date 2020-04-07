@@ -92,6 +92,19 @@ Polymer({
     <nuxeo-resource id="task" path="/task" headers='{"fetch-task": "targetDocumentIds,actors"}'></nuxeo-resource>
     <nuxeo-resource id="user" path="/user"></nuxeo-resource>
 
+    <nuxeo-document doc-id="[[document.uid]]" id="audit"></nuxeo-document>
+
+    <!-- Changed -->
+    <template is="dom-if" if="[[_changed]]">
+      <div class="bar">
+        <div class="item">
+          <iron-icon icon="icons:info"></iron-icon>
+          <span>Document has changed!</span>
+        </div>
+        <paper-button class="primary" on-tap="_refresh" noink>Refresh</paper-button>
+      </div>
+    </template>
+
     <!-- workflows -->
     <template is="dom-repeat" items="[[workflows]]" as="workflow">
       <nuxeo-workflow-graph id="graph-[[workflow.id]]" workflow-id="[[workflow.id]]"></nuxeo-workflow-graph>
@@ -205,6 +218,10 @@ Polymer({
   properties: {
     document: {
       type: Object,
+      observer: '_documentChanged',
+    },
+    _changed: {
+      type: Boolean,
     },
     tasks: {
       type: Array,
@@ -215,6 +232,16 @@ Polymer({
       computed: '_workflows(document)',
     },
     _wfTasks: Array,
+  },
+
+  _documentChanged() {
+    this._changed = false;
+    this.$.audit.subscribe((_) => (this._changed = true));
+  },
+
+  _refresh() {
+    __APOLLO_CLIENT__.cache.evict(`Document:${this.document.uid}`);
+    this.fire('document-updated');
   },
 
   _computeRetentionUntiLabel(doc) {

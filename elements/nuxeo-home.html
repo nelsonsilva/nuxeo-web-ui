@@ -277,6 +277,11 @@ limitations under the License.
           observer: '_visibleChanged',
         },
 
+        user: {
+          type: Object,
+          observer: '_userChanged',
+        },
+
         _recentDocuments: {
           type: Array,
           value: [],
@@ -302,6 +307,10 @@ limitations under the License.
         }
       },
 
+      _userChanged(user) {
+        this.$.favoriteDocs.items = user.favorites.entries;
+      },
+
       _refresh() {
         this.$.latestEditedDocs.fetch();
         this.$.nx.connect().then((user) => {
@@ -311,6 +320,7 @@ limitations under the License.
           this.$.tasksList.fetch();
         });
         this.$.recentStorage.reload();
+        /*
         this._fetchFavorite().then((favorite) => {
           if (!(favorite && favorite.uid)) {
             return;
@@ -320,6 +330,7 @@ limitations under the License.
           this.$.favoritesProvider.page = 1;
           this.$.favoriteDocs.fetch();
         });
+        */
       },
 
       _navigate(e) {

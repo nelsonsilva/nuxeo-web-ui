@@ -162,6 +162,10 @@ const development = merge([
       host: '0.0.0.0',
       historyApiFallback: true,
       proxy: {
+        '/nuxeo/graphql': {
+          target: 'http://localhost:4000',
+          pathRewrite: { '^/nuxeo/graphql': '/graphql' },
+        },
         '/nuxeo': `http://${process.env.NUXEO_HOST || 'localhost:8080'}/`,
       },
     },
