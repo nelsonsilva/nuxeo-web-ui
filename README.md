@@ -1,5 +1,6 @@
-[![Build Status](https://qa.nuxeo.org/jenkins/buildStatus/icon?job=master/plugins_nuxeo-web-ui-master-master)](https://qa.nuxeo.org/jenkins/job/master/job/plugins_nuxeo-web-ui-master-master/)
+[![Build Status](https://jenkins.webui.dev.nuxeo.com/buildStatus/icon?job=nuxeo%2Fnuxeo-web-ui%2Fmaster)](https://jenkins.webui.dev.nuxeo.com/job/nuxeo/job/nuxeo-web-ui/job/master/)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5d8cd2a3c56745ecaae7e7f92a683ea7)](https://www.codacy.com/app/Nuxeo/nuxeo-web-ui)
+[![Actions Panel](https://img.shields.io/badge/actionspanel-enabled-brightgreen)](https://www.actionspanel.app/app/nuxeo/nuxeo-web-ui)
 
 ## Nuxeo Web UI
 
