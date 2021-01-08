@@ -34,8 +34,8 @@ preview:
   nuxeo:
     webui:
       image:
-        repository:
-        tag:
+        repository: $DOCKER_REGISTRY/$DOCKER_IMAGE
+        tag: $VERSION
       fullnameOverride: preview
       packages: nuxeo-dam
       service:
