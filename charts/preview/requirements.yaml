@@ -8,6 +8,6 @@ dependencies:
   repository: http://chartmuseum.jenkins-x.io
   version: 2.3.111
 - name: nuxeo
-  version: 0.1.2
+  version: ~1.1.0
   repository: http://chartmuseum.platform.dev.nuxeo.com
   alias: nuxeo

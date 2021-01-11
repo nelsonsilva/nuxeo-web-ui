@@ -30,13 +30,15 @@ nuxeo:
     deploy: false
   postgresql:
     deploy: false
+  elasticsearch:
+    deploy: false
 
   webui:
+    fullname: preview
     image:
       repository: $DOCKER_REGISTRY/$DOCKER_IMAGE
       tag: $VERSION
       pullPolicy: Always
-    fullnameOverride: preview
     packages: nuxeo-dam
     service:
       port: 80
