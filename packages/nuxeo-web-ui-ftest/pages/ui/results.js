@@ -7,7 +7,7 @@ export default class Results extends BasePage {
   }
 
   get actions() {
-    return this.el.elements('slot[name="actions"]');
+    return this.el.element('slot[name="actions"]');
   }
 
   get displayModes() {
@@ -16,7 +16,7 @@ export default class Results extends BasePage {
 
   get displayMode() {
     this.actions.waitForVisible();
-    const displayMode = this.displayModes.value.filter((result) => result.getAttribute('disabled') !== null);
+    const displayMode = this.displayModes.filter((result) => result.getAttribute('disabled') !== null);
     return displayMode[0]
       .getAttribute('title')
       .replace('Switch to ', '')
@@ -25,7 +25,7 @@ export default class Results extends BasePage {
   }
 
   get toggleTableView() {
-    return this.displayModes.value.find((e) => e.getAttribute('title').includes('Table View'));
+    return this.displayModes.find((e) => e.getAttribute('title').includes('Table View'));
   }
 
   get toggleColumnSettings() {
@@ -74,7 +74,10 @@ export default class Results extends BasePage {
 
   resultsCount(displayMode) {
     const rows = this.getResults(displayMode);
-    return rows.value.filter((result) => result.getAttribute('hidden') === null).length;
+    if (!rows) {
+      return 0;
+    }
+    return rows.filter((result) => result.getAttribute('hidden') === null).length;
   }
 
   get resultsCountLabel() {

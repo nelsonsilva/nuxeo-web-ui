@@ -36,7 +36,7 @@ export default class Search extends Results {
 
   getSavedSearch(savedSearchName) {
     driver.waitUntil(() => {
-      const els = driver.elements(`${this._selector} #actionsDropdown paper-item`).value;
+      const els = driver.elements(`${this._selector} #actionsDropdown paper-item`);
       return els.length > 1;
     });
     return this.el.elementByTextContent('#actionsDropdown paper-item', savedSearchName);
@@ -62,7 +62,7 @@ export default class Search extends Results {
     let fieldEl;
     driver.waitUntil(() => {
       fieldEl = this.getField(field);
-      return !!fieldEl.value;
+      return !!fieldEl;
     });
     fieldEl.waitForVisible();
     fieldEl.scrollIntoView();
@@ -81,6 +81,6 @@ export default class Search extends Results {
 
   quickSearchResultsCount() {
     const rows = this.el.element('#results #selector').elements('a.item');
-    return rows.value.filter((result) => result.getAttribute('hidden') === null).length;
+    return rows.filter((result) => result.getAttribute('hidden') === null).length;
   }
 }

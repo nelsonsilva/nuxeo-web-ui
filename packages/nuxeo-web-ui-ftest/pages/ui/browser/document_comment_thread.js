@@ -7,7 +7,7 @@ export default class DocumentCommentThread extends BasePage {
   }
 
   get nbItems() {
-    const items = this.el.elements('nuxeo-document-comment').value;
+    const items = this.el.elements('nuxeo-document-comment');
     let count = 0;
     items.forEach((item) => {
       if (item.isVisible()) {
@@ -22,7 +22,7 @@ export default class DocumentCommentThread extends BasePage {
   }
 
   getComment(text, user) {
-    const comments = this.el.elements('nuxeo-document-comment').value;
+    const comments = this.el.elements('nuxeo-document-comment');
     const match = comments.find((item) => {
       const comment = new DocumentComment(item);
       return comment.author.getText() === user && comment.text.getText() === text;
