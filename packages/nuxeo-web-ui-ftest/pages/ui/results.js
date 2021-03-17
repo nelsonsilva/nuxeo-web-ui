@@ -53,7 +53,7 @@ export default class Results extends BasePage {
 
   getColumnCheckbox(heading) {
     this.el.waitForVisible('nuxeo-dialog[id="columnsSettingsPopup"]');
-    const tr = this.el.elementByTextContent('nuxeo-dialog[id="columnsSettingsPopup"] tr', heading);
+    const tr = this.el.elements('nuxeo-dialog[id="columnsSettingsPopup"] tr').find((e) => e.getText() === heading);
     tr.waitForVisible('paper-checkbox');
     return tr.element('paper-checkbox');
   }
@@ -69,7 +69,7 @@ export default class Results extends BasePage {
     this.el.waitForVisible('nuxeo-data-table-row[header]');
     const row = this.el.element('nuxeo-data-table-row[header]');
     row.waitForVisible('nuxeo-data-table-cell:not([hidden])');
-    return row.elementByTextContent('nuxeo-data-table-cell:not([hidden])', heading);
+    return row.elements('nuxeo-data-table-cell:not([hidden])').find((e) => e.getText() === heading);
   }
 
   resultsCount(displayMode) {

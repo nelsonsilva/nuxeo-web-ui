@@ -175,7 +175,10 @@ export default class Browser extends BasePage {
   hasTitle(title) {
     $('.breadcrumb-item-current').waitForVisible();
     driver.waitUntil(
-      () => driver.getText('.breadcrumb-item-current').trim() === title,
+      () =>
+        $('.breadcrumb-item-current')
+          .getText()
+          .trim() === title,
       'The document does not have such title',
     );
     return true;
@@ -206,10 +209,12 @@ export default class Browser extends BasePage {
     this.waitForChildren();
     const { rows } = this;
     let i;
-    for (i = 0; i < rows.length; i++) {
+    for (i = 1; i < rows.length; i++) {
       if (
-        rows[i].isVisible('nuxeo-data-table-cell a.title') &&
-        rows[i].getText('nuxeo-data-table-cell a.title').trim() === title
+        rows[i]
+          .element('nuxeo-data-table-cell a.title')
+          .getText()
+          .trim() === title
       ) {
         // minus 1 because of the table header
         return i - 1;
@@ -221,17 +226,16 @@ export default class Browser extends BasePage {
   sortContent(field, order) {
     driver.waitUntil(() => {
       this.waitForChildren();
-      const columnIndex = this.currentPage
+      const idx = this.currentPage
         .elements('nuxeo-data-table nuxeo-data-table-column')
         .map((col) => col.getAttribute('sortBy'))
         .findIndex((colSortByField) => colSortByField && colSortByField.toLowerCase() === field.toLowerCase());
-      if (columnIndex === -1) {
+      if (idx === -1) {
         throw new Error('Field not found');
       }
-      const sortElt = this.currentPage
-        .elements('nuxeo-data-table nuxeo-data-table-row[header] nuxeo-data-table-cell')[columnIndex]
-        .element('nuxeo-data-table-column-sort');
-      const currentSorting = sortElt.elements('paper-icon-button').getAttribute('direction');
+      const header = this.currentPage.element('nuxeo-data-table nuxeo-data-table-row[header]');
+      const sortElt = header.element(`nuxeo-data-table-cell:nth-of-type(${idx + 1}) nuxeo-data-table-column-sort`);
+      const currentSorting = sortElt.element('paper-icon-button').getAttribute('direction');
       if (currentSorting && order.toLowerCase() === currentSorting.toLowerCase()) {
         return true;
       }

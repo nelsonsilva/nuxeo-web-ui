@@ -9,7 +9,7 @@ export default class Search extends Results {
 
   get saveSearchAsButton() {
     driver.waitForVisible('#actions paper-button');
-    return driver.elementByTextContent('#actions paper-button', 'Save As');
+    return driver.elements('#actions paper-button').find((e) => e.getText() === 'Save As');
   }
 
   get confirmSaveSearchButton() {
@@ -27,7 +27,7 @@ export default class Search extends Results {
 
   get shareAction() {
     driver.waitForVisible('nuxeo-saved-search-actions paper-item');
-    return driver.elementByTextContent('nuxeo-saved-search-actions paper-item', 'Share');
+    return driver.elements('nuxeo-saved-search-actions paper-item').find((e) => e.getText() === 'Share');
   }
 
   get permissionsView() {
@@ -39,7 +39,7 @@ export default class Search extends Results {
       const els = driver.elements(`${this._selector} #actionsDropdown paper-item`);
       return els.length > 1;
     });
-    return this.el.elementByTextContent('#actionsDropdown paper-item', savedSearchName);
+    return this.el.elements('#actionsDropdown paper-item').find((e) => e.getText() === savedSearchName);
   }
 
   enterInput(text) {

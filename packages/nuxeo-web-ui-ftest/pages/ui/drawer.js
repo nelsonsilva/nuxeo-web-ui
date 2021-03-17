@@ -7,7 +7,6 @@ import Tasks from './tasks';
 
 export default class Drawer extends BasePage {
   get menu() {
-    console.log("EL", this.el);
     return this.el.$('#menu');
   }
 

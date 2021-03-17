@@ -1,3 +1,4 @@
+/* eslint-disable prefer-arrow-callback */
 /**
  * Inspired by:
  * - https://github.com/diego-fernandez-santos/wdio-shadow
@@ -99,9 +100,9 @@ function findDeep(selector, multiple, baseElement, filterBy) {
     // eslint-disable-next-line no-new-func
     const filter = new Function(['element'], filterBy);
     if (Array.isArray(result)) {
-      return result; // .filter(filter);
+      return result.filter(filter);
     }
-    return result; // filter(result) ? result : null;
+    return filter(result) ? result : null;
   }
   return result;
 }
@@ -124,11 +125,11 @@ const shadowElement = (selector, multiple, baseElement, filterBy) =>
 
 // export init function for initialization
 module.exports = class {
-
-  static get name() { return 'ShadowDOM'; }
+  static get name() {
+    return 'ShadowDOM';
+  }
 
   before() {
-
     if (!browser) {
       throw new Error('A WebdriverIO instance is needed to initialise wdio-webcomponents');
     }
@@ -141,14 +142,10 @@ module.exports = class {
       return this.shadowElement(arg1).then((r) => this.execute(arg2, r.value));
     });
 
-    browser.overwriteCommand(
-      'findElement',
-      (origFn, using, value) => shadowElement(rebuildSelector(using, value)),
-    );
+    browser.overwriteCommand('findElement', (origFn, using, value) => shadowElement(rebuildSelector(using, value)));
 
-    browser.overwriteCommand(
-      'findElements',
-      (origFn, using, value) => shadowElement(rebuildSelector(using, value), true),
+    browser.overwriteCommand('findElements', (origFn, using, value) =>
+      shadowElement(rebuildSelector(using, value), true),
     );
 
     browser.overwriteCommand(
@@ -156,26 +153,45 @@ module.exports = class {
       async (origFn, el, using, value) => shadowElement(rebuildSelector(using, value), false, { ELEMENT: el }),
       true,
     );
-    
+
     browser.overwriteCommand(
       'findElementsFromElement',
       async (origFn, el, using, value) => shadowElement(rebuildSelector(using, value), true, { ELEMENT: el }),
       true,
     );
-    
+
     browser.addCommand('hasElementByTextContent', function(selector, textContent) {
-      return !!shadowElement(selector, true, undefined, `return element.textContent.trim() === "${textContent.trim()}";`);
+      return !!shadowElement(
+        selector,
+        true,
+        undefined,
+        `return element.textContent.trim() === "${textContent.trim()}";`,
+      );
     });
 
     browser.addCommand('elementByTextContent', function(selector, textContent) {
       this.waitForVisible(selector);
-      return shadowElement(selector, true, undefined, `return element.textContent.trim() === "${textContent.trim()}";`)[0];
+      return shadowElement(
+        selector,
+        true,
+        undefined,
+        `return element.textContent.trim() === "${textContent.trim()}";`,
+      )[0];
     });
 
-    browser.addCommand('elementByTextContent', function(selector, textContent) {
-      this.waitForVisible(selector);
-      return shadowElement(selector, true, { ELEMENT: this.elementId }, `return element.textContent.trim() === "${textContent.trim()}";`)[0];
-    }, true);
+    browser.addCommand(
+      'elementByTextContent',
+      function(selector, textContent) {
+        this.waitForVisible(selector);
+        return shadowElement(
+          selector,
+          true,
+          { ELEMENT: this.elementId },
+          `return element.textContent.trim() === "${textContent.trim()}";`,
+        )[0];
+      },
+      true,
+    );
 
     browser.addCommand('scrollIntoView', function(selector) {
       return this.shadowExecute(selector, (element) =>

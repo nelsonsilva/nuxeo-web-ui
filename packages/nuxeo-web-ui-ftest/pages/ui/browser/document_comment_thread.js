@@ -22,6 +22,10 @@ export default class DocumentCommentThread extends BasePage {
   }
 
   getComment(text, user) {
+    // XXX - support the possessive form (ie John's) for compat
+    if (user.endsWith("'s")) {
+      user = user.substr(0, user.length - 2);
+    }
     const comments = this.el.elements('nuxeo-document-comment');
     const match = comments.find((item) => {
       const comment = new DocumentComment(item);
@@ -30,7 +34,7 @@ export default class DocumentCommentThread extends BasePage {
     if (match) {
       return new DocumentComment(match);
     }
-    throw new Error(`Not found any comment authored by "${user}" with the following text: "${text}"`);
+    throw new Error(`No comment authored by "${user}" with the following text: "${text}" found`);
   }
 
   writeComment(text) {

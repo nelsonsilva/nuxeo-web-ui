@@ -82,8 +82,7 @@ global.fieldRegistry.register(
   (element, value) => {
     element.element('.input-element input').click();
     element.waitForExist('paper-item');
-    const item = element.elementByTextContent('paper-item', value);
-    item.waitForExist();
+    const item = element.elements('paper-item').find((e) => e.getText() === value);
     item.click();
   },
 );
