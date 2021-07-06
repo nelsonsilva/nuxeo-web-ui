@@ -1,6 +1,18 @@
 import { config } from '@nuxeo/nuxeo-elements';
 import { importHTML, importHref } from '@nuxeo/nuxeo-ui-elements/import-href.js';
 import { setFallbackNotificationTarget } from '@nuxeo/nuxeo-elements/nuxeo-notify-behavior.js';
+import { login } from './oauth.js';
+
+const doLogin = () =>
+  login(Nuxeo.login.oauth).then((token) => {
+    const connection = Object.assign(document.createElement('nuxeo-connection'), {
+      url: '/nuxeo',
+      repositoryName: 'default',
+      method: 'bearerToken',
+      token,
+    });
+    document.body.appendChild(connection);
+  });
 
 const loadApp = () => import(/* webpackMode: "eager" */ './elements/nuxeo-app.js');
 const loadLegacy = () => import(/* webpackMode: "eager" */ './legacy.js');
@@ -48,6 +60,7 @@ const ready =
       });
 
 ready
+  .then(doLogin)
   .then(loadApp)
   .then(loadLegacy)
   .then(loadBundle)

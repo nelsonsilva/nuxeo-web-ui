@@ -62,12 +62,6 @@ limitations under the License.
   </head>
 
   <body>
-    <nuxeo-connection
-      url="<%= htmlWebpackPlugin.options.nuxeo.url %>"
-      method="form"
-      repository-name="default"
-    ></nuxeo-connection>
-
     <nuxeo-app base-url="/" unresolved>
       <div id="sidebar">
         <img src="themes/default/logo.png" alt="logo" />
@@ -128,6 +122,14 @@ limitations under the License.
             // router: { key: { document: 'uid', }, }, // uncomment to enable navigation by UID (see WEBUI-14)
           },
         },
+        login: {
+            oauth: {
+              // baseUrl: 'http://localhost:5002/idp/connect',
+              baseUrl: 'http://localhost:8080/nuxeo/oauth2',
+              clientId: 'nuxeo-client',
+              scope: 'openid email',
+            }
+          }
       };
       /* eslint-enable no-var, no-unused-vars */
     </script>
